@@ -10,11 +10,16 @@ header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
 require '../config/database.php';
-require '../models/User.php';
+require '../models/User_register_login.php';
+// "php://input" -> this contains json data sent by the frontend (vue.js)
+// file_get_contents() this function is used to read data of the "php://input"
 
-$data = json_decode(file_get_contents("php://input"),true);
+$json_data = file_get_contents("php://input"); //json not understoond by php so we use this "file_get_contents("php://input");" , this help to php for understood json data 
+$data = json_decode($json_data,true); //this convert json to php array, The true tells PHP to convert JSON into an associative array. and without true not convert data from json to php array 
 
+// json_encode() convert php array to json for understood for vuejs (frontend)
 if(!$data){
+
     echo json_encode([
         "status"=>false,
         "message"=>"No Data Received"
@@ -38,8 +43,8 @@ if(empty($fullname) || empty($email) || empty($password)){
 $db = new Database();
 $conn = $db->connect();
 
-$user = new User($conn);
-$res = $user->register(
+$user_register = new User($conn);
+$res = $user_register->register(
     $fullname,
     $email,
     $password,

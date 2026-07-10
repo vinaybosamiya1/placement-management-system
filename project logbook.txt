@@ -1,0 +1,8 @@
+start register backed with php - dt - 2/7/26 (connect vue and php for register) end at 4-7-26
+create login.php file for login users AT 4-7-26 and end at 5-7-26
+
+solve some error of login.vue and register.vue at 6-7-26
+solve some error of login.vue and register.vue at 7-7-26
+
+register has been completed at - 8-7-26
+login has been completed at -   10-7-26

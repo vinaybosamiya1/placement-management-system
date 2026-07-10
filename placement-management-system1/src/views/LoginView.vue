@@ -85,14 +85,19 @@
                 Password?</a>
             </div>
 
+            
             <Transition name="shake">
-              <div v-if="error" class="error-banner">
+              <div v-if="message" :class="[
+                messageType === 'success' ? 'text-green-600' : 'text-red-600',
+                messageType === 'success'? 'border border-green-600':'border border-red-600',
+                messageType === 'success'? 'bg-green-100':'bg-red-200',
+              ]" class="message-banner" >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <span>{{ error }}</span>
+                <span>{{ message }}</span>
               </div>
             </Transition>
 
@@ -108,8 +113,9 @@
                 </span>
 
                 
-                <RouterLink to="/dashboard" v-else>
-                <span  key="label" class="flex items-center justify-center gap-2">
+                
+                <!-- <RouterLink to="/dashboard" v-else> -->
+                <span v-else key="label" class="flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -117,7 +123,8 @@
                   </svg>
                   Login  
                 </span>
-              </RouterLink>
+
+              <!-- </RouterLink> -->
                 
               </Transition>
             </button>
@@ -150,15 +157,19 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { RouterLink } from "vue-router";
+import { useRouter, RouterLink } from "vue-router";
 import axios from "axios";
+
+const router = useRouter();
+
 const users = ref([]);
 
 const form = reactive({ email: "", password: "" });
 const focus = reactive({ email: false, password: false });
 const showPassword = ref(false);
 const loading = ref(false);
-const error = ref("");
+const message = ref("");
+const messageType = ref("");
 const particles = ref([]);
 
 onMounted(async () => {
@@ -167,12 +178,12 @@ onMounted(async () => {
     style: `left:${Math.random() * 100}%;top:${Math.random() *200}%;width:${4 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;animation-delay:${Math.random() * 2}s;animation-duration:${6 + Math.random() * 8}s;opacity:${0.15 + Math.random() * 0.25};`,
   }));
 
-  const res = await axios.get("http://localhost/placementManagement/placement-management-system/placement-management-system1/api/login.php");
+
   
-  users.value = res.data;
+
   
 });
- 
+
 // function createRipple(e) {
 //   const btn = e.currentTarget;
 //   const circle = document.createElement("span");
@@ -184,11 +195,35 @@ onMounted(async () => {
 // } 
 
 async function handleLogin() {
-  error.value = "";
+  // message.value = "";
   loading.value = true;
   await new Promise((r) =>  setTimeout(r, 1200));
   loading.value = false;
-  error.value = "Invalid email or password. Please try again.";
+
+
+  const res = await axios.post("http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/login.php",
+  {
+    email:form.email,
+    password:form.password,
+  });
+  console.log(res)
+ 
+  if(res.data.status){
+    // message.value = "Login Successfull!";
+    
+    message.value = res.data.message + "!";
+    messageType.value = "success";
+
+    new Promise(() =>  setTimeout(()=>{
+      router.push("/dashboard");
+    }, 1200));
+    
+  }else{
+    // message.value = "Invalid email or password. Please try again.";
+    message.value =res.data.message;
+    messageType.value = "error";
+    
+  }
 }
 </script>
 
@@ -381,18 +416,19 @@ async function handleLogin() {
   transform: translateY(-50%) scale(1.15);
 }
 
-.error-banner {
+.message-banner {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  /* background: #fef2f2;
+  border: 1px solid #fecaca; */
+  /* color: #dc2626; */
   padding: 10px 14px;
   border-radius: 10px;
   font-size: 0.85rem;
   font-weight: 500;
 }
+
 
 .btn-primary {
   position: relative;

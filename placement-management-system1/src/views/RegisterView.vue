@@ -303,6 +303,7 @@ async function handleRegister() {
         password: form.password,
       }
     );
+    console.log(response.data);
     if(response.data.status){
       success.value = true;
       setTimeout(() => router.push("/login"), 2000);
