@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import LoginView from "../views/LoginView.vue";
-import LoginViewcopy from "../views/LoginView copy.vue";
-import RegisterView from "../views/RegisterView.vue";
+  import LoginView from "../views/LoginView.vue";
+  import LoginViewcopy from "../views/LoginView copy.vue";
+  import RegisterView from "../views/RegisterView.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),

@@ -10,7 +10,7 @@
                     <component :is="item.logo" class="h-7 w-7" />
                     <span>{{ item.title }}</span>
                 </li>
-               <router-link to="/login">Login</router-link>
+               
             </ul>
         </div>
     <!-- </div> -->
