@@ -6,11 +6,11 @@
             <ul class="space-y-4 ">
                 <li v-for="(item, index) in leftsideItems" :key="index" :ref="el => menuItems[index] = el"
                     class="menu-item w-full min-h-14 py-4 bg-white px-6  gap-3 rounded-xl cursor-pointer flex items-center font-medium  hover:font-bold "
-                    @mouseenter="hoverIn(index)" @mouseleave="hoverout(index)">
+                    @mouseenter="hoverIn(index)" @mouseleave="hoverout(index)"
+                    @click="handleLogout(item.title)">
                     <component :is="item.logo" class="h-7 w-7" />
                     <span>{{ item.title }}</span>
                 </li>
-               
             </ul>
         </div>
     <!-- </div> -->
@@ -23,6 +23,11 @@ import JobListing from "../assets/svg/leftPanel-icon/briefcase-2-line.svg";
 import applicationIcon from "../assets/svg/leftPanel-icon/file-list-fill.svg";
 import profileIcon from "../assets/svg/leftPanel-icon/user-fill.svg";
 import logoutIcon from "../assets/svg/leftPanel-icon/logout-box-r-line.svg";
+import axios from "axios";
+import { useRouter } from "vue-router";
+
+
+const router = useRouter();
 
 const menuItems = ref([]);
 
@@ -51,5 +56,20 @@ const hoverout = (index) => {
         duration: 0.3,
         ease: "power2.out",
     })
+    
 };
+
+const Logout = async () => {
+    await axios.post("http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/logout.php",{withCredentials:true});
+    
+    localStorage.removeItem('isLoggedIn');
+    // Add your axios call to logout.php and router.push('/login') here
+    router.push('/login');
+};
+const handleLogout = (title)=>{
+    if(title === "Logout"){
+        Logout();
+        
+    }
+}
 </script>

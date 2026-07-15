@@ -85,13 +85,13 @@
                 Password?</a>
             </div>
 
-            
+
             <Transition name="shake">
               <div v-if="message" :class="[
                 messageType === 'success' ? 'text-green-600' : 'text-red-600',
-                messageType === 'success'? 'border border-green-600':'border border-red-600',
-                messageType === 'success'? 'bg-green-100':'bg-red-200',
-              ]" class="message-banner" >
+                messageType === 'success' ? 'border border-green-600' : 'border border-red-600',
+                messageType === 'success' ? 'bg-green-100' : 'bg-red-200',
+              ]" class="message-banner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -112,8 +112,8 @@
                   Signing in...
                 </span>
 
-                
-                
+
+
                 <!-- <RouterLink to="/dashboard" v-else> -->
                 <span v-else key="label" class="flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -121,11 +121,11 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                       d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                   </svg>
-                  Login  
+                  Login
                 </span>
 
-              <!-- </RouterLink> -->
-                
+                <!-- </RouterLink> -->
+
               </Transition>
             </button>
           </form>
@@ -138,20 +138,20 @@
 
           <p class="text-center text-sm text-gray-600">
             Don't have an account?
-            
+
             <RouterLink to="/register"
-            class="text-blue-600 font-bold hover:underline ml-1 transition-colors hover:text-blue-800">Register Now →
-          </RouterLink>
-        </p>
-        <div>
-   <!-- <h1 class="text-red-700">{{ users.name }}</h1>
+              class="text-blue-600 font-bold hover:underline ml-1 transition-colors hover:text-blue-800">Register Now →
+            </RouterLink>
+          </p>
+          <div>
+            <!-- <h1 class="text-red-700">{{ users.name }}</h1>
 <p>{{ users.course }}</p>
 <p>{{ users.language }}</p> -->
-</div>
+          </div>
         </div>
       </Transition>
     </div>
-    
+
   </div>
 </template>
 
@@ -175,13 +175,13 @@ const particles = ref([]);
 onMounted(async () => {
   particles.value = Array.from({ length: 200 }, (_, i) => ({
     id: i,
-    style: `left:${Math.random() * 100}%;top:${Math.random() *200}%;width:${4 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;animation-delay:${Math.random() * 2}s;animation-duration:${6 + Math.random() * 8}s;opacity:${0.15 + Math.random() * 0.25};`,
+    style: `left:${Math.random() * 100}%;top:${Math.random() * 200}%;width:${4 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;animation-delay:${Math.random() * 2}s;animation-duration:${6 + Math.random() * 8}s;opacity:${0.15 + Math.random() * 0.25};`,
   }));
 
 
-  
 
-  
+
+
 });
 
 // function createRipple(e) {
@@ -197,43 +197,64 @@ onMounted(async () => {
 async function handleLogin() {
   // message.value = "";
   loading.value = true;
-  await new Promise((r) =>  setTimeout(r, 1200));
+  await new Promise((r) => setTimeout(r, 1200));
   loading.value = false;
 
 
   const res = await axios.post("http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/login.php",
-  {
-    email:form.email,
-    password:form.password,
+    {
+      email: form.email,
+      password: form.password,
+    }, {
+    withCredentials: true     
   });
-  console.log(res)
- 
-  if(res.data.status){
-    // message.value = "Login Successfull!";
+  /* this line tells the browser save the cookie, 
+    inside the cookie available session_id, inside the session_id 
+    available session data like id and email  both save as cookie like "abc123" and inside the 
+    abc123 available id and email */
+    // note :- so that inside cookie available sessionId, so it called session cookie
     
+    /* 
+      (1) how it work session id (session cookie):
+      when user login so php create session with login details and that session sends to
+      the browser and that browser give the unique id like "abc1234" if the  "withCredentials:true"
+      "abc1234" id saved now in the browser and "abc1234" in "abc1234" id has login details
+
+      (2) how it work session id (session cookie):
+      when user login so php create session with login details and that session sends to
+      the browser's cookie (browser has allready cookie method for store some info) with 
+      unique id like "abc1234" this id has info of login
+    */
+  // console.log(res)
+
+  if (res.data.status) {
+    // message.value = "Login Successfull!";
+    // console.log("Logged In User Data:", res.data);
     message.value = res.data.message + "!";
     messageType.value = "success";
 
-    new Promise(() =>  setTimeout(()=>{
+    localStorage.setItem('isLoggedIn', 'true');
+
+    new Promise(() => setTimeout(() => {
       router.push("/dashboard");
     }, 1200));
-    
-  }else{
+
+  } else {
     // message.value = "Invalid email or password. Please try again.";
-    message.value =res.data.message;
+    message.value = res.data.message;
     messageType.value = "error";
-    
+
   }
 }
 </script>
 
 <style scoped>
-
 .particle {
   position: absolute;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  /* animation: particle-rise linear infinite; *//* below used instead of this */
+  /* animation: particle-rise linear infinite; */
+  /* below used instead of this */
   animation-name: particle-rise;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
@@ -241,7 +262,7 @@ async function handleLogin() {
 
 @keyframes particle-rise {
   0% {
-    /* transform: translateY(0) scale(1); */ 
+    /* transform: translateY(0) scale(1); */
     /* use below  instead of above */
     transform: translateY(0);
     opacity: 0
@@ -261,11 +282,11 @@ async function handleLogin() {
   }
 }
 
-  .glass-card {
-    background: rgba(255, 255, 255, 0.92);  
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-  }
+.glass-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
 
 .icon-ring {
   width: 84px;
@@ -442,7 +463,7 @@ async function handleLogin() {
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s ;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
   box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
 }
 
@@ -517,7 +538,7 @@ async function handleLogin() {
 } */
 
 
-  .card-enter-active {
+.card-enter-active {
   animation: card-appear 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -531,9 +552,9 @@ async function handleLogin() {
     transform: translateY(0) scale(1);
     opacity: 1
   }
-}  
+}
 
-  .fade-quick-enter-active,
+.fade-quick-enter-active,
 .fade-quick-leave-active {
   transition: opacity 0.15s, transform 0.15s;
 }
@@ -550,8 +571,8 @@ async function handleLogin() {
 
 .shake-enter-active {
   animation: shake 0.5s ease;
-}  
- 
+}
+
 @keyframes shake {
 
   0%,
@@ -574,12 +595,12 @@ async function handleLogin() {
   80% {
     transform: translateX(5px)
   }
-}  
+}
 
-  @keyframes ripple-anim {
+@keyframes ripple-anim {
   to {
     transform: scale(1);
     opacity: 0
   }
-}  
+}
 </style>

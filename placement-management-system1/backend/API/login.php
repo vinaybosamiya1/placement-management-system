@@ -1,6 +1,9 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
+session_start();
+// header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
@@ -35,6 +38,12 @@ $conn = $db->connect();
 
 $user_login = New User($conn);
 $res = $user_login->login($email,$password);
+
+
+if($res['status'] === true){
+    $_SESSION['user_id'] = $res['user']['id'];
+    $_SESSION['user_email'] = $res['user']['email'];
+}
 
 echo json_encode($res);
 
