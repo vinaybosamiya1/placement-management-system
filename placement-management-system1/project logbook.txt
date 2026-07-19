@@ -1,0 +1,17 @@
+start register backed with php - dt - 2/7/26 (connect vue and php for register) end at 4-7-26
+create login.php file for login users AT 4-7-26 and end at 5-7-26
+
+solve some error of login.vue and register.vue at 6-7-26
+solve some error of login.vue and register.vue at 7-7-26
+
+register has been completed at - 8-7-26
+login has been completed at -   10-7-26
+
+add session to the login.vue and login.php page and index.js 15-7-2026
+add gaurd (beforeEach)  for not go to other page without login  15-7-26
+and create logout.php for logout users and delete the session   15-7-26
+
+create the fetchuserdata folder and inside the create getuser.php for fetch data for the navbar and show dynamic all data to the navbar 
+at 16-7-26
+
+add responsiveness in leftsidepage.vue and navbar.vue 17-7-26
