@@ -240,8 +240,8 @@ async function handleLogin() {
     }, 1200));
 
   } else {
-    // message.value = "Invalid email or password. Please try again.";
-    message.value = res.data.message;
+     message.value = "Invalid Email Or Password. Please Try Again.";
+    //message.value = res.data.message;
     messageType.value = "error";
 
   }
