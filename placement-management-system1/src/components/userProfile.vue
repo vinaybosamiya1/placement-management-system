@@ -16,13 +16,16 @@
                         <!-- Name & Basic Info -->
                         <div class="text-center sm:text-left">
                             <div class="flex flex-wrap justify-center sm:justify-start items-center gap-2">
-                                <h1 class="text-2xl justify-center text-center font-bold text-slate-800">{{ student.firstName }} {{student.lastName }}</h1>
+                                <!-- <h1 class="text-2xl justify-center text-center font-bold text-slate-800">{{ student.firstName }} {{student.lastName }}</h1> -->
+                                <h1 class="text-2xl justify-center text-center font-bold text-slate-800"> {{
+                                    user.full_name }}</h1>
                                 <!-- <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold"
                                     :class="statusBadgeClass">
                                     {{ student.placementStatus }}
                                 </span> -->
                             </div>
-                            <p class="text-slate-500 text-sm mt-1">{{ student.branch }} | Batch of {{ student.completedYear }}</p>
+                            <p class="text-slate-500 text-sm mt-1">{{ student.branch }} | Batch of {{
+                                student.completedYear }}</p>
                             <!-- <p class="text-slate-400 text-xs mt-1">Roll No: {{ student.rollNo }}</p> -->
                         </div>
 
@@ -39,15 +42,20 @@
                             </svg>
                             Resume.pdf
                         </button>
-                        <button @click="toggleEdit"
-                            class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Edit Profile
-                        </button>
+                        <router-link to="/editprofile">
+
+                            <!-- <button @click="toggleEdit"
+                            class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-sm"> -->
+                            <button
+                                class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                Edit Profile
+                            </button>
+                        </router-link>
                     </div>
                 </div>
             </div>
@@ -113,7 +121,8 @@
 
                     <!-- Academic Performance Overview -->
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Academic Summary</h2>
+                        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Academic Summary
+                        </h2>
                         <div class="grid grid-cols-2 gap-4">
                             <div class="p-4 bg-indigo-50/50 rounded-xl border border-indigo-100/50 text-center">
                                 <p class="text-xs text-slate-500 font-medium uppercase">Current CGPA</p>
@@ -134,7 +143,22 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <!-- <button @click="toggleEdit"
+                            class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-sm"> -->
+                    <button @click="Logout"
+                        class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 transition-colors duration-200 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Log Out
+                    </button>
+
                 </div>
+
 
                 <!-- Right Column: Academic details, Projects & Job Tracking -->
                 <div class="lg:col-span-2 space-y-6">
@@ -161,23 +185,31 @@
                             </div>
                         </div>
 
+
                         <!-- Projects Section -->
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                            
+
                             <h3 class="text-lg font-semibold text-slate-800 mb-4">Key Projects</h3>
 
                             <div class="space-y-6">
-                                <div v-for="(project, index) in student.projects" :key="index" class="relative pl-6 border-l-2 border-indigo-100 group">
-                                    <div class="absolute -left-1.5 top-1.5 w-2.5 h-2.5 rounded-full bg-indigo-500 group-hover:scale-125 transition-transform"></div>
+                                <div v-for="(project, index) in student.projects" :key="index"
+                                    class="relative pl-6 border-l-2 border-indigo-100 group">
+                                    <div
+                                        class="absolute -left-1.5 top-1.5 w-2.5 h-2.5 rounded-full bg-indigo-500 group-hover:scale-125 transition-transform">
+                                    </div>
                                     <div class="flex justify-between items-start gap-4">
                                         <h4 class="font-semibold text-slate-800 text-base">{{ project.title }}</h4>
-                                        <span class="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded">{{project.techStack }}</span>
+                                        <span
+                                            class="text-xs text-indigo-600 font-medium bg-indigo-50 px-2 py-0.5 rounded">{{ project.techStack
+                                            }}</span>
                                     </div>
-                                    <p class="text-slate-500 text-sm mt-1.5 leading-relaxed">{{ project.description }}</p>
+                                    <p class="text-slate-500 text-sm mt-1.5 leading-relaxed">{{ project.description }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Tab Content 2: Application Tracker -->
                     <!-- <div v-if="activeTab === 'applications'" class="space-y-6">
@@ -228,6 +260,7 @@
                         </div>
                     </div> -->
 
+
                 </div>
             </div>
         </div>
@@ -235,8 +268,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from "vue-router";
+import axios from 'axios';
 
+
+const user = ref([]);
+const router = useRouter();
 // Active Tab management
 const activeTab = ref('profile')
 const tabs = [
@@ -244,10 +282,12 @@ const tabs = [
     // { id: 'applications', name: 'Applications Track' }
 ]
 
+
+
 // Mock data structured to easily integrate with an API later
 const student = ref({
-    firstName: 'Aarav',
-    lastName: 'Sharma',
+    firstName: false,
+    lastName: false,
     rollNo: '2022CSE1024',
     branch: 'Computer Science & Engineering',
     completedYear: 2026,
@@ -280,7 +320,7 @@ const student = ref({
     //         description: 'Engineered a dashboard utilizing modern REST APIs to retrieve and analyze localized product prices and buyer reviews.'
     //     }
     // ],
-    
+
     // applications: [
     //     { company: 'Google', role: 'Software Engineering Intern', appliedDate: 'Feb 12, 2026', status: 'In Interview' },
     //     { company: 'Microsoft', role: 'SWE - DevDiv', appliedDate: 'Jan 24, 2026', status: 'Offered' },
@@ -323,7 +363,40 @@ const toggleEdit = () => {
 const downloadResume = () => {
     alert('Initiate file download or open PDF link here.')
 }
+
+
+
+
+
+onMounted(async () => {
+
+    const res = await axios.get("http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/models/fetchUserData/getUser.php",
+        {
+            withCredentials: true,
+        }
+    );
+
+    if (res.data.success) {
+        user.value = res.data.user;
+        // student.value.firstName = full_name[0]
+    }
+    //   console.log(res.data.user.full_name);
+    student.value.firstName = res.data.user.full_name.split(" ")[0];
+    student.value.lastName = res.data.user.full_name.split(" ")[1];
+    // console.log(student.value.laststName = res.data.user.full_name.split(" ")[1])
+
+
+})
+const Logout = async () => {
+    await axios.post("http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/logout.php", { withCredentials: true });
+
+    localStorage.removeItem('isLoggedIn');
+    // Add your axios call to logout.php and router.push('/login') here
+    router.push('/login');
+};
+
 </script>
+
 
 <style scoped>
 /* Scoped custom animations or scroll behaviors can go here */

@@ -15,3 +15,6 @@ create the fetchuserdata folder and inside the create getuser.php for fetch data
 at 16-7-26
 
 add responsiveness in leftsidepage.vue and navbar.vue 17-7-26
+
+i improving UI of login, register, profile 3 file's ui and creaeted new file as editUserprofile.vue for update user's profile at 20-7-26
+
