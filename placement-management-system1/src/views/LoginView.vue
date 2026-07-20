@@ -1,157 +1,203 @@
-<!-- start with 26/6/2026  -->
 <template>
-  <div
-    class="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500">
+  <div class="min-h-screen flex flex-col relative overflow-hidden bg-slate-950 font-sans antialiased text-slate-100">
+    <!-- Animated Glowing Background Blobs -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <!-- <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
-      <div class="blob blob-3"></div> -->
+      <div
+        class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-blue-600/20 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]">
+      </div>
+      <div
+        class="absolute bottom-[-10%] right-[-10%] w-[45vw] h-[45vw] rounded-full bg-teal-500/15 blur-[120px] animate-[pulse_10s_ease-in-out_infinite_2s]">
+      </div>
+      <div
+        class="absolute top-[30%] right-[15%] w-[35vw] h-[35vw] rounded-full bg-orange-500/10 blur-[100px] animate-[pulse_12s_ease-in-out_infinite_4s]">
+      </div>
+
+      <!-- Floating Background Particles (From Code 1) -->
       <div v-for="p in particles" :key="p.id" class="particle" :style="p.style"></div>
     </div>
 
-    <div class="relative z-10 flex-1 flex items-center justify-center px-4 py-8">
+    <!-- Main Content Area -->
+    <div class="relative z-10 flex-1 flex items-center justify-center px-4 py-12">
       <Transition name="card" appear>
-        <div class="glass-card w-full max-w-md rounded-3xl p-8 shadow-2xl">
-          <!-- Branding -->
-          <div class="flex flex-col items-center mb-6">
-            <div class="icon-ring mb-3">
-              <div class="icon-inner">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
+        <div
+          class="glass-card w-full max-w-5xl rounded-3xl shadow-2xl border border-white/10 backdrop-blur-xl flex flex-col md:flex-row overflow-hidden">
+
+          <!-- LEFT PANEL: Branding -->
+          <div
+            class="relative w-full md:w-[42%] bg-gradient-to-b from-blue-600 via-blue-700 to-indigo-950 text-white p-8 md:p-10 flex flex-col justify-between items-center text-center overflow-hidden min-h-[260px] md:min-h-full rounded-b-[40px] md:rounded-b-none md:rounded-r-[110px] border-b md:border-b-0 md:border-r border-white/10 shadow-xl">
+
+            <div class="w-full mt-10">
+              <span class="text-lg font-bold uppercase tracking-widest text-blue-50 block mb-1">Placement Portal</span>
+              <div class="h-[2px] w-8 bg-blue-400 mx-auto rounded-full"></div>
             </div>
-            <h1 class="text-lg font-bold text-blue-700 tracking-wide text-center">Placement Management System</h1>
+
+            <div class="logo-wrapper group">
+              <img src="../assets/img/placement management system.png" alt="Logo"
+                class="w-80 h-80 drop-shadow-[0_8px_16px_rgba(37,99,235,0.3)] transition-transform duration-500 group-hover:scale-105">
+            </div>
+
+            <div class="max-w-[220px] pb-4">
+              <h2 class="text-lg md:text-xl font-bold tracking-wide text-white mb-2">Welcome Back!</h2>
+              <p class="text-[11px] text-blue-100/70 leading-relaxed">
+                Log in to your account to manage your career options, track applications, and view upcoming drives.
+              </p>
+            </div>
+            <div class="w-full pt-4 ">
+              <RouterLink to="/register"
+                class="text-white underline-offset-0 font-bold hover:underline ml-1 transition-colors hover:text-blue-300">
+                <button type="button" @click="toggleMode"
+                  class="w-full max-w-[150px] cursor-pointer border border-blue-300 hover:border-white text-blue-100 hover:text-white font-bold rounded-full py-1.5 px-6 text-xs bg-white/5 hover:bg-white/10 active:scale-95 transition-all duration-300 uppercase tracking-widest">
+                  SIGN UP →
+                </button>
+              </RouterLink>
+            </div>
           </div>
 
-          <h2 class="text-2xl font-bold text-center text-gray-800 mb-1">Welcome Back</h2>
-          <p class="text-center text-gray-500 text-sm mb-7">Sign in to your account to continue</p>
+          <!-- RIGHT PANEL: Dark Glass Form Workspace -->
+          <div class="w-full md:w-[58%] p-8 md:p-12 flex flex-col justify-center relative z-20">
 
-          <form @submit.prevent="handleLogin" class="space-y-5">
-            <!-- Email -->
-            <div class="form-group" :class="{ focused: focus.email, filled: form.email }">
-              <label class="float-label">Email Address</label>
-              <div class="input-wrap">
-                <span class="input-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </span>
-                <input v-model="form.email" type="email" required class="float-input" @focus="focus.email = true"
-                  @blur="focus.email = false" />
-                <span class="input-line"></span>
-              </div>
+            <div class="mb-6">
+              <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Sign In</h2>
+              <p class="text-xs text-slate-400 mt-1">Access your dashboard to continue</p>
             </div>
 
-            <!-- Password -->
-            <div class="form-group" :class="{ focused: focus.password, filled: form.password }">
-              <label class="float-label">Password</label>
-              <div class="input-wrap">
-                <span class="input-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            <!-- Multi-Role Tab Switcher -->
+            <div class="flex p-1 bg-slate-900/60 rounded-xl border border-white/5 mb-6 max-w-sm">
+              <button type="button" v-for="role in ['student', 'recruiter', 'coordinator']" :key="role"
+                @click="selectedRole = role" :class="[
+                  selectedRole === role
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-slate-200'
+                ]"
+                class="flex-1 py-1.5 text-xs font-bold rounded-lg uppercase tracking-wider transition-all duration-300 capitalize">
+                {{ role }}
+              </button>
+            </div>
+
+            <form @submit.prevent="handleLogin" class="space-y-5">
+
+              <!-- Email Input -->
+              <div class="form-group" :class="{ focused: focus.email, filled: form.email }">
+                <label class="float-label">Email Address</label>
+                <div class="input-wrap">
+                  <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </span>
+                  <input v-model="form.email" type="email" required class="float-input" @focus="focus.email = true"
+                    @blur="focus.email = false" />
+                  <span class="input-line"></span>
+                </div>
+              </div>
+
+              <!-- Password Input -->
+              <div class="form-group" :class="{ focused: focus.password, filled: form.password }">
+                <label class="float-label">Password</label>
+                <div class="input-wrap">
+                  <span class="input-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </span>
+                  <input v-model="form.password" :type="showPassword ? 'text' : 'password'" required
+                    class="float-input pr-10" @focus="focus.password = true" @blur="focus.password = false" />
+                  <button type="button" @click="showPassword = !showPassword" class="eye-btn" tabindex="-1">
+                    <Transition name="fade-quick" mode="out-in">
+                      <svg v-if="!showPassword" key="eye" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      <svg v-else key="eye-off" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      </svg>
+                    </Transition>
+                  </button>
+                  <span class="input-line"></span>
+                </div>
+              </div>
+
+              <!-- Options Area -->
+              <div class="flex items-center justify-between text-xs py-1">
+                <label class="flex items-center gap-2 text-slate-400 cursor-pointer select-none">
+                  <input type="checkbox"
+                    class="rounded bg-slate-950 border-slate-700 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900" />
+                  <span>Keep me signed in</span>
+                </label>
+                <RouterLink to="/forgot-password"
+                  class="text-sm text-blue-400 hover:text-blue-300 transition-colors font-medium hover:underline">
+                  Forgot Password?
+                </RouterLink>
+              </div>
+
+              <!-- Message Banner -->
+              <Transition name="shake">
+                <div v-if="message" :class="[
+                  messageType === 'success' ? 'text-emerald-400 border border-emerald-500/30 bg-emerald-950/40' : 'text-rose-400 border border-rose-500/30 bg-rose-950/40',
+                ]" class="message-banner">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
-                </span>
-                <input v-model="form.password" :type="showPassword ? 'text' : 'password'" required
-                  class="float-input pr-10" @focus="focus.password = true" @blur="focus.password = false" />
-                <button type="button" @click="showPassword = !showPassword" class="eye-btn" tabindex="-1">
+                  <span>{{ message }}</span>
+                </div>
+              </Transition>
+
+              <!-- Submit Button -->
+              <div class="pt-2">
+                <button type="submit" :disabled="loading" class="btn-primary w-full md:w-[100%]"
+                  @mousedown="createRipple">
                   <Transition name="fade-quick" mode="out-in">
-                    <svg v-if="!showPassword" key="eye" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                    <svg v-else key="eye-off" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                      viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
+
+                    <span v-if="loading" key="loading" class="flex items-center justify-center gap-2">
+                      <svg class="animate-spin w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                      </svg>
+                      Signing in...
+                    </span>
+
+                    <span v-else key="label" class="flex items-center justify-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                      </svg>
+                      Login as {{ selectedRole }}
+                    </span>
                   </Transition>
                 </button>
-                <span class="input-line"></span>
               </div>
+            </form>
+
+            <div class="flex items-center my-6">
+              <div class="flex-1 border-t border-slate-800"></div>
+              <span class="px-3 text-xs text-slate-500 font-bold tracking-wider">OR</span>
+              <div class="flex-1 border-t border-slate-800"></div>
             </div>
 
-            <div class="flex justify-end -mt-2">
-              <a href="#"
-                class="text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium hover:underline">Forgot
-                Password?</a>
-            </div>
+            <p class="text-center text-sm text-slate-400">
+              Don't have an account?
+              <RouterLink to="/register"
+                class="text-blue-400 font-bold hover:underline ml-1 transition-colors hover:text-blue-300">
+                Register Now →
+              </RouterLink>
+            </p>
 
-
-            <Transition name="shake">
-              <div v-if="message" :class="[
-                messageType === 'success' ? 'text-green-600' : 'text-red-600',
-                messageType === 'success' ? 'border border-green-600' : 'border border-red-600',
-                messageType === 'success' ? 'bg-green-100' : 'bg-red-200',
-              ]" class="message-banner">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <span>{{ message }}</span>
-              </div>
-            </Transition>
-
-            <button type="submit" :disabled="loading" class="btn-primary" @mousedown="createRipple">
-              <Transition name="fade-quick" mode="out-in">
-
-                <span v-if="loading" key="loading" class="flex items-center justify-center gap-2">
-                  <svg class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                  </svg>
-                  Signing in...
-                </span>
-
-
-
-                <!-- <RouterLink to="/dashboard" v-else> -->
-                <span v-else key="label" class="flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
-                  Login
-                </span>
-
-                <!-- </RouterLink> -->
-
-              </Transition>
-            </button>
-          </form>
-
-          <div class="flex items-center my-6">
-            <div class="flex-1 border-t border-gray-200"></div>
-            <span class="px-3 text-xs text-gray-400 font-medium">OR</span>
-            <div class="flex-1 border-t border-gray-200"></div>
-          </div>
-
-          <p class="text-center text-sm text-gray-600">
-            Don't have an account?
-
-            <RouterLink to="/register"
-              class="text-blue-600 font-bold hover:underline ml-1 transition-colors hover:text-blue-800">Register Now →
-            </RouterLink>
-          </p>
-          <div>
-            <!-- <h1 class="text-red-700">{{ users.name }}</h1>
-<p>{{ users.course }}</p>
-<p>{{ users.language }}</p> -->
           </div>
         </div>
       </Transition>
     </div>
-
   </div>
 </template>
 
@@ -162,8 +208,7 @@ import axios from "axios";
 
 const router = useRouter();
 
-const users = ref([]);
-
+const selectedRole = ref("student");
 const form = reactive({ email: "", password: "" });
 const focus = reactive({ email: false, password: false });
 const showPassword = ref(false);
@@ -172,89 +217,77 @@ const message = ref("");
 const messageType = ref("");
 const particles = ref([]);
 
-onMounted(async () => {
+onMounted(() => {
+  // Density and style from Code 1, applied to the dark background seamlessly
   particles.value = Array.from({ length: 200 }, (_, i) => ({
     id: i,
     style: `left:${Math.random() * 100}%;top:${Math.random() * 200}%;width:${4 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;animation-delay:${Math.random() * 2}s;animation-duration:${6 + Math.random() * 8}s;opacity:${0.15 + Math.random() * 0.25};`,
   }));
-
-
-
-
-
 });
 
-// function createRipple(e) {
-//   const btn = e.currentTarget;
-//   const circle = document.createElement("span");
-//   const rect = btn.getBoundingClientRect();
-//   const size = Math.max(rect.width, rect.height) * 2;
-//   circle.style.cssText = `position:absolute;width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px;background:rgba(255,255,255,0.3);border-radius:50%;transform:scale(0);animation:ripple-anim 0.6s linear;pointer-events:none;`;
-//   btn.appendChild(circle);
-//   setTimeout(() => circle.remove(), 700);
-// } 
+function createRipple(e) {
+  const btn = e.currentTarget;
+  const circle = document.createElement("span");
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 2;
+
+  circle.style.cssText = `position:absolute;width:${size}px;height:${size}px;left:${e.clientX - rect.left - size / 2}px;top:${e.clientY - rect.top - size / 2}px;background:rgba(255,255,255,0.3);border-radius:50%;transform:scale(0);animation:ripple-anim 0.6s linear;pointer-events:none;`;
+
+  btn.appendChild(circle);
+  setTimeout(() => circle.remove(), 700);
+}
 
 async function handleLogin() {
-  // message.value = "";
   loading.value = true;
+  message.value = "";
+
+  // Fake delay from Code 1
   await new Promise((r) => setTimeout(r, 1200));
-  loading.value = false;
 
+  try {
+    const res = await axios.post("http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/login.php",
+      {
+        email: form.email,
+        password: form.password,
+        role: selectedRole.value // Role selection appended to Code 1's logic
+      }, {
+      withCredentials: true
+    });
 
-  const res = await axios.post("http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/login.php",
-    {
-      email: form.email,
-      password: form.password,
-    }, {
-    withCredentials: true     
-  });
-  /* this line tells the browser save the cookie, 
-    inside the cookie available session_id, inside the session_id 
-    available session data like id and email  both save as cookie like "abc123" and inside the 
-    abc123 available id and email */
-    // note :- so that inside cookie available sessionId, so it called session cookie
-    
-    /* 
-      (1) how it work session id (session cookie):
-      when user login so php create session with login details and that session sends to
-      the browser and that browser give the unique id like "abc1234" if the  "withCredentials:true"
-      "abc1234" id saved now in the browser and "abc1234" in "abc1234" id has login details
+    /* this line tells the browser save the cookie,
+    inside the cookie available session_id, inside the session_id
+    available session data like id and email both save as cookie */
 
-      (2) how it work session id (session cookie):
-      when user login so php create session with login details and that session sends to
-      the browser's cookie (browser has allready cookie method for store some info) with 
-      unique id like "abc1234" this id has info of login
-    */
-  // console.log(res)
+    if (res.data.status) {
+      message.value = res.data.message + "!";
+      messageType.value = "success";
 
-  if (res.data.status) {
-    // message.value = "Login Successfull!";
-    // console.log("Logged In User Data:", res.data);
-    message.value = res.data.message + "!";
-    messageType.value = "success";
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userRole', selectedRole.value);
 
-    localStorage.setItem('isLoggedIn', 'true');
+      new Promise(() => setTimeout(() => {
+        router.push("/dashboard");
+      }, 1200));
 
-    new Promise(() => setTimeout(() => {
-      router.push("/dashboard");
-    }, 1200));
-
-  } else {
-     message.value = "Invalid Email Or Password. Please Try Again.";
-    //message.value = res.data.message;
+    } else {
+      message.value = "Invalid Email Or Password. Please Try Again.";
+      messageType.value = "error";
+    }
+  } catch (error) {
+    message.value = "Unable to connect to the server. Please verify your connection.";
     messageType.value = "error";
-
+  } finally {
+    loading.value = false;
   }
 }
 </script>
 
 <style scoped>
+/* Animated Background Dust Particles (Logic heavily inspired by Code 1) */
 .particle {
   position: absolute;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  /* animation: particle-rise linear infinite; */
-  /* below used instead of this */
   animation-name: particle-rise;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
@@ -262,111 +295,62 @@ async function handleLogin() {
 
 @keyframes particle-rise {
   0% {
-    /* transform: translateY(0) scale(1); */
-    /* use below  instead of above */
     transform: translateY(0);
-    opacity: 0
+    opacity: 0;
   }
 
   10% {
-    opacity: 1
+    opacity: 1;
   }
 
   90% {
-    opacity: 1
+    opacity: 1;
   }
 
   100% {
     transform: translateY(-150vh) scale(0.5);
-    opacity: 0
+    opacity: 0;
   }
 }
 
+/* Glassmorphism Card Styling */
 .glass-card {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(15, 23, 42, 0.45);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
-.icon-ring {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.4);
-  animation: icon-pulse 3s ease-in-out infinite;
+.logo-wrapper {
   position: relative;
-}
-
-.icon-ring::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  bottom: -7px;
-  right: -7px;
-  left: -7px;
   border-radius: 50%;
-  border: 2px solid rgba(37, 99, 235, 0.3);
-  animation: ring-spin 4s linear infinite;
+  padding: 4px;
 }
 
-.icon-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@keyframes icon-pulse {
-
-  0%,
-  100% {
-    box-shadow: 0 8px 32px rgba(37, 99, 235, 0.4);
-    transform: scale(1)
-  }
-
-  50% {
-    box-shadow: 0 12px 48px rgba(37, 99, 235, 0.6);
-    transform: scale(1.04)
-  }
-}
-
-@keyframes ring-spin {
-  from {
-    transform: rotate(0deg)
-  }
-
-  to {
-    transform: rotate(360deg)
-  }
-}
-
+/* Form floating interactive labels */
 .form-group {
   position: relative;
 }
 
 .float-label {
   position: absolute;
-  left: 40px;
-  top: 13px;
+  left: 42px;
+  top: 14px;
   font-size: 0.875rem;
-  color: #9ca3af;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #94a3b8;
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
   pointer-events: none;
-  z-index: 1;
+  z-index: 10;
 }
 
 .form-group.focused .float-label,
 .form-group.filled .float-label {
   top: -8px;
   left: 36px;
-  font-size: 0.72rem;
-  color: #2563eb;
-  background: white;
-  padding: 0 4px;
-  font-weight: 600;
+  font-size: 0.75rem;
+  color: #3b82f6;
+  background: #0f172a;
+  padding: 0 6px;
+  font-weight: 700;
+  border-radius: 4px;
 }
 
 .input-wrap {
@@ -375,56 +359,58 @@ async function handleLogin() {
 
 .input-icon {
   position: absolute;
-  left: 10px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
-  transition: color 0.2s;
+  color: #64748b;
+  transition: color 0.25s;
   display: flex;
 }
 
 .form-group.focused .input-icon {
-  color: #2563eb;
+  color: #3b82f6;
 }
 
 .float-input {
   width: 100%;
-  padding: 12px 12px 12px 40px;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 0.9rem;
+  padding: 13px 14px 13px 42px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  font-size: 0.95rem;
   outline: none;
-  background: #f9fafb;
-  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+  background: rgba(15, 23, 42, 0.6);
+  color: #f8fafc;
+  transition: border-color 0.25s, background-color 0.25s, box-shadow 0.25s;
 }
 
 .float-input:focus {
-  border-color: #2563eb;
-  background: white;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  border-color: #3b82f6;
+  background: rgba(15, 23, 42, 0.8);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }
 
 .input-line {
   position: absolute;
   bottom: 0;
-  left: 0;
+  left: 50%;
   height: 2px;
   width: 0;
-  background: #2563eb;
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
   border-radius: 2px;
-  transition: width 0.3s;
+  transition: width 0.3s ease, left 0.3s ease;
 }
 
 .form-group.focused .input-line {
   width: 100%;
+  left: 0;
 }
 
 .eye-btn {
   position: absolute;
-  right: 12px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
+  color: #64748b;
   background: none;
   border: none;
   cursor: pointer;
@@ -433,111 +419,58 @@ async function handleLogin() {
 }
 
 .eye-btn:hover {
-  color: #2563eb;
-  transform: translateY(-50%) scale(1.15);
+  color: #3b82f6;
+  transform: translateY(-50%) scale(1.1);
 }
 
 .message-banner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  /* background: #fef2f2;
-  border: 1px solid #fecaca; */
-  /* color: #dc2626; */
-  padding: 10px 14px;
-  border-radius: 10px;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-
+/* Primary Button Styling */
 .btn-primary {
   position: relative;
   overflow: hidden;
-  width: 100%;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #0284c7 100%);
   color: white;
   font-weight: 700;
   font-size: 0.95rem;
-  padding: 13px;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 14px;
   border: none;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
-  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.45);
+  transform: translateY(-1.5px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(0.5px);
 }
 
 .btn-primary:disabled {
-  opacity: 0.65;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* below code is not required or compalsary */
-/* .blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.4;
-  animation: blob-float 12s ease-in-out infinite alternate;
-}
-
-.blob-1 {
-  width: 500px;
-  height: 500px;
-  background: #1e40af;
-  top: -150px;
-  left: -150px;
-  animation-delay: 0s;
-}
-
-.blob-2 {
-  width: 400px;
-  height: 400px;
-  background: #3b82f6;
-  bottom: -100px;
-  right: -100px;
-  animation-delay: 3s;
-}
-
-.blob-3 {
-  width: 300px;
-  height: 300px;
-  background: #60a5fa;
-  top: 50%;
-  left: 50%;
-  animation: blob-float3 10s ease-in-out infinite alternate;
-}
-
-@keyframes blob-float {
-  0% {
-    transform: scale(1) translate(0, 0)
-  }
-
-  100% {
-    transform: scale(1.15) translate(30px, 30px)
+@keyframes ripple-anim {
+  to {
+    transform: scale(1);
+    opacity: 0;
   }
 }
 
-@keyframes blob-float3 {
-  0% {
-    transform: translate(-50%, -50%) scale(1)
-  }
-
-  100% {
-    transform: translate(-40%, -60%) scale(1.2)
-  }
-} */
-
-
+/* Animations (from Code 1 + Code 2 tweaks) */
 .card-enter-active {
   animation: card-appear 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -545,12 +478,12 @@ async function handleLogin() {
 @keyframes card-appear {
   from {
     transform: translateY(40px) scale(0.95);
-    opacity: 0
+    opacity: 0;
   }
 
   to {
     transform: translateY(0) scale(1);
-    opacity: 1
+    opacity: 1;
   }
 }
 
@@ -559,11 +492,7 @@ async function handleLogin() {
   transition: opacity 0.15s, transform 0.15s;
 }
 
-.fade-quick-enter-from {
-  opacity: 0;
-  transform: scale(0.8);
-}
-
+.fade-quick-enter-from,
 .fade-quick-leave-to {
   opacity: 0;
   transform: scale(0.8);
@@ -577,30 +506,23 @@ async function handleLogin() {
 
   0%,
   100% {
-    transform: translateX(0)
+    transform: translateX(0);
   }
 
   20% {
-    transform: translateX(-8px)
+    transform: translateX(-8px);
   }
 
   40% {
-    transform: translateX(8px)
+    transform: translateX(8px);
   }
 
   60% {
-    transform: translateX(-5px)
+    transform: translateX(-5px);
   }
 
   80% {
-    transform: translateX(5px)
-  }
-}
-
-@keyframes ripple-anim {
-  to {
-    transform: scale(1);
-    opacity: 0
+    transform: translateX(5px);
   }
 }
 </style>
