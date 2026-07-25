@@ -1,11 +1,23 @@
 <template>
     <div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8 font-sans">
         <div class="max-w-7xl mx-auto space-y-7">
+            <div class="flex items-center justify-between">
+                <router-link to="/dashboard">
+                    <button class="cursor-pointer inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Back to Dashboard
+                    </button>
+                </router-link>
+                <span class="text-xs text-slate-400">Last updated: Just now</span>
+            </div>
 
             <!-- Header / Profile Summary Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                     <div class="flex flex-col sm:flex-row items-center gap-6">
+                        
                         <!-- Avatar -->
                         <div
                             class="relative w-24 h-24 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-3xl font-bold uppercase shadow-inner">
@@ -187,7 +199,7 @@
 
 
                         <!-- Projects Section -->
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                        <!-- <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
 
                             <h3 class="text-lg font-semibold text-slate-800 mb-4">Key Projects</h3>
 
@@ -207,7 +219,7 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
 

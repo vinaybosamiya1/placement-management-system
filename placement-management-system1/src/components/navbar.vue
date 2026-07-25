@@ -1,5 +1,5 @@
 <!-- create at 22/6/26 and complete at 24/6/26 -->
- 
+
 <template>
   <main>
     <nav class="bg-blue-600 text-white shadow-md
@@ -42,7 +42,8 @@
         </div>
 
         <!-- User -->
-        <button class="flex items-center
+        <router-link to="/profile">
+          <button class="flex items-center
                  gap-2 sm:gap-3
                  rounded-full
                  border-2 lg:border-3 border-blue-800
@@ -53,32 +54,32 @@
                  p-1.5 sm:p-2
                  pr-2 sm:pr-3">
 
-          <div class="h-8 w-8 sm:h-10 sm:w-10
+            <div class="h-8 w-8 sm:h-10 sm:w-10
                    bg-white
                    rounded-full
                    flex items-center justify-center
                    overflow-hidden
                    p-1">
-            <img src="../assets/svg/navbar-icon/user-2-line.svg" alt="User" class="h-full w-full opacity-80" />
-          </div>
+              <img src="../assets/svg/navbar-icon/user-2-line.svg" alt="User" class="h-full w-full opacity-80" />
+            </div>
 
-          <!-- Hide on Mobile -->
-           <router-link to="/profile">
+            <!-- Hide on Mobile -->
 
-             <div class="hidden md:block text-left">
-               
-               <h2 class="text-sm font-semibold">
-                 {{ user.full_name }}
-                </h2>
-                
-                <p class="text-xs text-blue-200">
-                  BCA Final Year
-                </p>
-                
-              </div>
-            </router-link>
 
-        </button>
+            <div class="hidden md:block text-left">
+
+              <h2 class="text-sm font-semibold">
+                {{ user.full_name }}
+              </h2>
+
+              <p class="text-xs text-blue-200">
+                BCA Final Year
+              </p>
+
+            </div>
+
+          </button>
+        </router-link>
 
       </div>
 
