@@ -11,7 +11,10 @@ require "../config/database.php";
 require "../models/User_register_login.php";
 
 $json_data = file_get_contents("php://input");
+
 $data = json_decode($json_data,true);
+
+// exit;
 
 if(!$data){
 
@@ -39,11 +42,27 @@ $conn = $db->connect();
 $user_login = New User($conn);
 $res = $user_login->login($email,$password);
 
+if ($res["status"] === true) {
 
-if($res['status'] === true){
-    $_SESSION['user_id'] = $res['user']['id'];
-    $_SESSION['user_email'] = $res['user']['email'];
+    $_SESSION["user_id"] = $res["user"]["id"];
+    $_SESSION["user_email"] = $res["user"]["email"];
+
+    echo json_encode([
+        "status" => true,
+        "message" => "Login Successful",
+        "user" => $res["user"],
+        "session_id" => session_id(),
+        "session_data" => $_SESSION
+    ]);
+
+    exit;
 }
+
+echo json_encode([
+    "status" => false,
+    "message" => $res["message"]
+]);
+
 
 echo json_encode($res);
 

@@ -18,6 +18,9 @@
                 <span class="text-xs text-slate-400">Last updated: Just now</span>
             </div>
 
+
+
+
             <!-- Page Title -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
                 <h1 class="text-2xl font-bold text-slate-800">Edit Your Profile</h1>
@@ -191,9 +194,12 @@
                                             </button>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
+                        <!-- Message Banner -->
+
 
                         <!-- 2. ACADEMICS & SOCIALS FORM -->
                         <div v-show="activeFormTab === 'academics'" class="p-6 space-y-6">
@@ -348,12 +354,11 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <!-- Form Sticky Footer Actions -->
                         <div class="border-t border-slate-100 p-6 bg-slate-50/50 flex items-center justify-between">
-                            <span v-if="saveSuccess"
+                            <!-- <span v-if="saveSuccess"
                                 class="text-emerald-600 text-xs font-semibold flex items-center gap-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
@@ -361,8 +366,20 @@
                                         d="M5 13l4 4L19 7" />
                                 </svg>
                                 Saved successfully!
-                            </span>
-                            <span v-else></span>
+                            </span> -->
+                            <Transition name="shake">
+                                <div v-if="message" :class="[
+                                    messageType === 'success' ? 'text-emerald-400 border border-emerald-500/30 bg-emerald-950/40' : 'text-rose-400 border border-rose-800 bg-red-200',
+                                ]" class="message-banner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span>{{ message }}</span>
+                                </div>
+                                <span v-else></span>
+                            </Transition>
 
                             <div class="flex gap-3">
                                 <router-link to="/profile">
@@ -382,7 +399,8 @@
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                         </path>
                                     </svg>
-                                    {{ isSaving ? 'Saving...' : 'Save Changes' }}
+                                    <!-- {{ isSaving ? "Saving..." : "Save Changes" }} -->
+                                    {{ saveButtonText }}
                                 </button>
                             </div>
                         </div>
@@ -396,8 +414,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter, RouterLink } from "vue-router";
 import axios from 'axios'
+
+const router = useRouter();
 
 
 // Sidebar settings tabs
@@ -419,6 +440,18 @@ const formTabs = [
         icon: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>`
     }
 ]
+// msg
+const messageType = ref("");
+const message = ref("");
+
+const showMessage = (text, type = "success", duration = 3000) => {
+    message.value = text;
+    messageType.value = type;
+
+    setTimeout(() => {
+        message.value = "";
+    }, duration);
+};
 
 // State management
 const isSaving = ref(false)
@@ -428,6 +461,8 @@ const newSkillInput = ref('')
 // File Upload Specific States
 const selectedFile = ref(null)
 const currentResumeName = ref('')
+const saveButtonText = ref("Save Changes");
+const originalStudent = ref(null);
 
 // Initialize standard responsive mock state which maps onto your current profile components
 const student = ref({
@@ -522,10 +557,10 @@ onMounted(async () => {
 
             // Set dynamic placeholders if backend returned empty
             student.value.rollNo = user.roll_no || '2022CSE1024';
-            student.value.branch = user.branch || 'Computer Science & Engineering';
+            student.value.branch = user.Branch || 'Computer Science & Engineering';
             student.value.completedYear = user.completed_year || 2026;
-            student.value.phone = user.phone || '+91 98765 43210';
-            student.value.location = user.location || 'Mumbai, Maharashtra';
+            student.value.phone = user.phone_number || '+91 98765 43210';
+            student.value.location = user.current_location || 'Mumbai, Maharashtra';
             student.value.academics = user.academics || { cgpa: '8.92', backlogs: '0', twelfth: '92.4', tenth: '95.0' };
             student.value.skills = user.skills || ['JavaScript', 'Vue.js', 'Node.js', 'Tailwind CSS', 'Python'];
             student.value.projects = user.projects || [
@@ -534,6 +569,8 @@ onMounted(async () => {
 
             // Load existing filename if saved on the user model (e.g. user.resume_name)
             currentResumeName.value = user.resume_name || 'resume_aarav.pdf';
+            originalStudent.value = JSON.stringify(student.value);
+            // console.log(originalStudent)
         }
     } catch (err) {
         console.error("Error retrieving student database settings", err);
@@ -542,10 +579,21 @@ onMounted(async () => {
 
 // Save profile POST method using FormData for multi-part file uploads
 const saveProfile = async () => {
+    const currentStudent = JSON.stringify(student.value); //JSON.stringify()? :- It converts a JavaScript object into a string.
+    if (currentStudent === originalStudent.value && !selectedFile.value) {
+
+        showMessage("No changes detected.", "error");
+
+        return;
+    }
+
     isSaving.value = true
     saveSuccess.value = false
+    saveButtonText.value = "Saving...";
 
     try {
+
+
         const formData = new FormData()
 
         // Append text fields
@@ -556,19 +604,19 @@ const saveProfile = async () => {
         formData.append('phone', student.value.phone)
         formData.append('location', student.value.location)
 
-        // Serialize object data to JSON strings (so PHP $_POST receives readable strings)
-        formData.append('socials', JSON.stringify(student.value.socials))
-        formData.append('academics', JSON.stringify(student.value.academics))
-        formData.append('skills', JSON.stringify(student.value.skills))
-        formData.append('projects', JSON.stringify(student.value.projects))
+        // // Serialize object data to JSON strings (so PHP $_POST receives readable strings)
+        // formData.append('socials', JSON.stringify(student.value.socials))
+        // formData.append('academics', JSON.stringify(student.value.academics))
+        // formData.append('skills', JSON.stringify(student.value.skills))
+        // formData.append('projects', JSON.stringify(student.value.projects))
 
         // Append the new PDF file to override the old file if chosen
-        if (selectedFile.value) {
-            formData.append('resume', selectedFile.value)
-        }
+        // if (selectedFile.value) {
+        //     formData.append('resume', selectedFile.value)
+        // }
 
         const res = await axios.post(
-            "http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/models/fetchUserData/updateUser.php",
+            "http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/api/updateUser.php",
             formData,
             {
                 headers: {
@@ -577,29 +625,90 @@ const saveProfile = async () => {
                 withCredentials: true
             }
         );
+        //console.log(res.data)
+        // console.log(res);
 
         if (res.data.success) {
-            saveSuccess.value = true
+            saveSuccess.value = true;
+
+            showMessage("Profile updated successfully!", "success");
+            saveButtonText.value = "Saving...";
+
+            // Keep the button showing Saving... for 2 seconds
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            saveButtonText.value = "Profile Updated ✓";
+
+            // Show Profile Updated ✓ for 1.5 seconds
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            saveButtonText.value = "Save Changes"
+            console.log("Redirecting...");;
+
+            router.push("/profile");
 
             // If we successfully saved a new file, update the active label and clear selection state
-            if (selectedFile.value) {
-                currentResumeName.value = selectedFile.value.name
-                selectedFile.value = null
-            }
+            // if (selectedFile.value) {
+            //     currentResumeName.value = selectedFile.value.name
+            //     // selectedFile.value = null
+            // }
 
-            setTimeout(() => {
-                saveSuccess.value = false
-            }, 3000)
+
+
+
+
         }
     } catch (error) {
         console.error("Save operational system error:", error)
-        alert('An unexpected error occurred while saving. Please try again.')
+        showMessage(
+            "Unable to update profile. Please try again.",
+            "error"
+        );
     } finally {
         isSaving.value = false
+        if (!saveSuccess.value) {
+            saveButtonText.value = "Save Changes";
+        }
     }
 }
 </script>
 
 <style scoped>
-/* Optional custom CSS styles */
+.shake-enter-active {
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-8px);
+    }
+
+    40% {
+        transform: translateX(8px);
+    }
+
+    60% {
+        transform: translateX(-5px);
+    }
+
+    80% {
+        transform: translateX(5px);
+    }
+}
+
+.message-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
 </style>

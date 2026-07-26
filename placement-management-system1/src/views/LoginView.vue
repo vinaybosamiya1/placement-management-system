@@ -253,6 +253,10 @@ async function handleLogin() {
       }, {
       withCredentials: true
     });
+    
+// console.log("Response:", res.data);
+// console.log("Session ID:", res.data.session_id);
+// console.log("Session Data:", res.data.session_data);
 
     /* this line tells the browser save the cookie,
     inside the cookie available session_id, inside the session_id

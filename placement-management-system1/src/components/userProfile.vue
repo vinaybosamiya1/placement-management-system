@@ -390,6 +390,11 @@ onMounted(async () => {
 
     if (res.data.success) {
         user.value = res.data.user;
+        
+        student.value.email = user.value.email;
+        student.value.phone = user.value.phone_number;
+        student.value.location = user.value.current_location;
+
         // student.value.firstName = full_name[0]
     }
     //   console.log(res.data.user.full_name);

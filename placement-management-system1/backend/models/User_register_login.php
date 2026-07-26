@@ -26,7 +26,7 @@ class User
         $hashPsw = password_hash($password, PASSWORD_DEFAULT);
         $query = $this->conn->prepare(
 
-            "INSERT INTO users
+            "INSERT INTO users_persontal_details
             (full_name,email,password)
             VALUES
             (:fullname,:email,:password)"
@@ -57,8 +57,9 @@ class User
     }
 
     public function login($email, $password)
-    {   $query = false;
-        $query = "SELECT * FROM users WHERE email=:email";
+    {
+        $query = false;
+        $query = "SELECT * FROM users_persontal_details WHERE email=:email";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(":email", $email);
@@ -86,6 +87,60 @@ class User
             "status" => false,
             "message" => "Wrong Password"
         ];
+    }
+
+    // public function updateProfile($id,$fullName,$rollNo,$branch,$completedYear,$phone,$location,$socials,$academics,$skills,$projects) 
+    public function updateProfile($id, $fullName, $rollNo, $branch, $completedYear, $phone, $location)
+    {
+
+        $query = $this->conn->prepare("UPDATE users_persontal_details SET 
+        full_name=:full_name,
+        roll_no=:roll_no,
+        Branch=:branch,
+        completed_year=:completed_year,
+        phone_number=:phone,
+        current_location=:location 
+        
+        WHERE id=:id");
+        // "socials=:socials,
+        // academics=:academics,
+        // skills=:skills,
+        // projects=:projects";
+
+        $res = $query->execute([
+            ":full_name" => $fullName,
+            ":roll_no" => $rollNo,
+            ":branch" => $branch,
+            ":completed_year" => $completedYear,
+            ":phone" => $phone,
+            ":location" => $location,
+
+            // ":socials"=>json_encode($socials),
+
+            // ":academics"=>json_encode($academics),
+
+            // ":skills"=>json_encode($skills),
+
+            // ":projects"=>json_encode($projects),
+
+            ":id" => $id
+        ]);
+        if ($res) {
+            return [
+                "success" => true,
+                "message" => "Profile Updated Successfully"
+            ];
+
+        }
+        
+        return [
+            "success" => false,
+            "message" => "Profile Update Failed"
+        ];
+
+
+
+
     }
 
 }
