@@ -90,10 +90,12 @@ class User
     }
 
     // public function updateProfile($id,$fullName,$rollNo,$branch,$completedYear,$phone,$location,$socials,$academics,$skills,$projects) 
-    public function updateProfile($id, $fullName, $rollNo, $branch, $completedYear, $phone, $location)
+    public function updateProfile($id,$firstName,$lastName, $fullName, $rollNo, $branch, $completedYear, $phone, $location)
     {
 
         $query = $this->conn->prepare("UPDATE users_persontal_details SET 
+        first_name=:first_name,
+        last_name=:last_name,
         full_name=:full_name,
         roll_no=:roll_no,
         Branch=:branch,
@@ -108,6 +110,8 @@ class User
         // projects=:projects";
 
         $res = $query->execute([
+            ":first_name" => $firstName,
+            ":last_name" => $lastName,
             ":full_name" => $fullName,
             ":roll_no" => $rollNo,
             ":branch" => $branch,

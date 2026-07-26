@@ -8,7 +8,7 @@ header("Content-Type: application/json");
 
 session_start();
 require '../config/database.php';
-require '../models/User_register_login.php';
+require '../models/User_crud.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -21,8 +21,10 @@ if (!isset($_SESSION['user_id'])) {
     ]);
 
     exit;
-} 
+}
 
+$firstName = trim($_POST["firstName"]);
+$lastName = trim($_POST["lastName"]);
 $fullName = trim($_POST["fullName"]);
 $rollNo = trim($_POST["rollNo"]);
 $branch = trim($_POST["branch"]);
@@ -34,6 +36,10 @@ $updateProfile = new User($conn);
 $result = $updateProfile->updateProfile(
 
     $_SESSION["user_id"],
+
+    $firstName,
+
+    $lastName,
 
     $fullName,
 
@@ -55,7 +61,7 @@ $result = $updateProfile->updateProfile(
 
     // $projects
 
-); 
+);
 echo json_encode($result);
 exit;
 

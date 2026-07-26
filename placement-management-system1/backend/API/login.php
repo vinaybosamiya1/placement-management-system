@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
 require "../config/database.php";
-require "../models/User_register_login.php";
+require "../models/User_crud.php";
 
 $json_data = file_get_contents("php://input");
 

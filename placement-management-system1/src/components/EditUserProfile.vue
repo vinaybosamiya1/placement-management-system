@@ -556,6 +556,7 @@ onMounted(async () => {
             }
 
             // Set dynamic placeholders if backend returned empty
+            console.log(student)
             student.value.rollNo = user.roll_no || '2022CSE1024';
             student.value.branch = user.Branch || 'Computer Science & Engineering';
             student.value.completedYear = user.completed_year || 2026;
@@ -597,6 +598,8 @@ const saveProfile = async () => {
         const formData = new FormData()
 
         // Append text fields
+        formData.append('firstName', student.value.firstName)
+        formData.append('lastName', student.value.lastName)
         formData.append('fullName', `${student.value.firstName} ${student.value.lastName}`.trim())
         formData.append('rollNo', student.value.rollNo)
         formData.append('branch', student.value.branch)

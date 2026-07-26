@@ -10,7 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
 require '../config/database.php';
-require '../models/User_register_login.php';
+require '../models/User_crud.php';
 // "php://input" -> this contains json data sent by the frontend (vue.js)
 // file_get_contents() this function is used to read data of the "php://input"
 
