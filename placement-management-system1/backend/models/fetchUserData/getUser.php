@@ -25,7 +25,20 @@ try {
         exit;
     }
 
-    $stmt = $conn->prepare("SELECT * FROM users_persontal_details WHERE id = ?");
+    $stmt = $conn->prepare("SELECT
+id,
+first_name,
+last_name,
+full_name,
+email,
+phone_number,
+roll_no,
+Branch,
+current_location,
+completed_year,
+resume_path
+FROM users_persontal_details
+WHERE id=?");
     $stmt->execute([$_SESSION['user_id']]);
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -90,45 +90,60 @@ class User
     }
 
     // public function updateProfile($id,$fullName,$rollNo,$branch,$completedYear,$phone,$location,$socials,$academics,$skills,$projects) 
-    public function updateProfile($id,$firstName,$lastName, $fullName, $rollNo, $branch, $completedYear, $phone, $location)
+    public function updateProfile($id, $firstName, $lastName, $fullName, $rollNo, $branch, $completedYear, $phone, $location, $resume_path)
     {
-
-        $query = $this->conn->prepare("UPDATE users_persontal_details SET 
-        first_name=:first_name,
-        last_name=:last_name,
-        full_name=:full_name,
-        roll_no=:roll_no,
-        Branch=:branch,
-        completed_year=:completed_year,
-        phone_number=:phone,
-        current_location=:location 
-        
-        WHERE id=:id");
+        if ($resume_path !== null) {
+            $sql = "
+UPDATE users_persontal_details
+SET
+first_name=:first_name,
+last_name=:last_name,
+full_name=:full_name,
+roll_no=:roll_no,
+Branch=:branch,
+completed_year=:completed_year,
+phone_number=:phone,
+current_location=:location,
+resume_path=:resume
+WHERE id=:id
+";
+        }else {
+            $sql = "
+UPDATE users_persontal_details
+SET
+first_name=:first_name,
+last_name=:last_name,
+full_name=:full_name,
+roll_no=:roll_no,
+Branch=:branch,
+completed_year=:completed_year,
+phone_number=:phone,
+current_location=:location
+WHERE id=:id
+";
+        }
         // "socials=:socials,
         // academics=:academics,
         // skills=:skills,
         // projects=:projects";
+        $query = $this->conn->prepare($sql);
 
-        $res = $query->execute([
-            ":first_name" => $firstName,
-            ":last_name" => $lastName,
-            ":full_name" => $fullName,
-            ":roll_no" => $rollNo,
-            ":branch" => $branch,
-            ":completed_year" => $completedYear,
-            ":phone" => $phone,
-            ":location" => $location,
-
-            // ":socials"=>json_encode($socials),
-
-            // ":academics"=>json_encode($academics),
-
-            // ":skills"=>json_encode($skills),
-
-            // ":projects"=>json_encode($projects),
-
-            ":id" => $id
-        ]);
+        $query->bindParam(":first_name", $firstName);
+        $query->bindParam(":last_name", $lastName);
+        $query->bindParam(":full_name", $fullName);
+        $query->bindParam(":roll_no", $rollNo);
+        $query->bindParam(":branch", $branch);
+        $query->bindParam(":completed_year", $completedYear);
+        $query->bindParam(":phone", $phone);
+        $query->bindParam(":location", $location);
+        $query->bindParam(":resume", $resume_path);
+        $query->bindParam(":id", $id);
+        $res = null;
+        try {
+            $res = $query->execute();
+        } catch (PDOException $e) {
+            die($e->getMessage());
+        }
         if ($res) {
             return [
                 "success" => true,
@@ -136,7 +151,7 @@ class User
             ];
 
         }
-        
+
         return [
             "success" => false,
             "message" => "Profile Update Failed"

@@ -132,70 +132,78 @@
                                     (PDF)</label>
 
                                 <!-- Show current uploaded resume info if available -->
-                                <div v-if="currentResumeName"
-                                    class="mt-2 flex items-center justify-between p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl">
-                                    <div class="flex items-center gap-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-indigo-500 shrink-0"
-                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                        <div>
-                                            <p class="text-xs font-semibold text-slate-700">Current Resume</p>
-                                            <p class="text-xs text-indigo-600 truncate max-w-[200px] sm:max-w-sm">{{
-                                                currentResumeName }}</p>
-                                        </div>
-                                    </div>
-                                    <span
-                                        class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded uppercase">Stored</span>
-                                </div>
-
-                                <!-- Drag & Drop / Click Zone -->
-                                <div class="mt-3 relative border-2 border-dashed rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center text-center cursor-pointer"
-                                    :class="selectedFile
-                                        ? 'border-indigo-500 bg-indigo-50/20'
-                                        : 'border-slate-200 hover:border-indigo-400 bg-slate-50/50 hover:bg-slate-50'">
-
-                                    <input type="file" accept="application/pdf" @change="handleFileChange"
-                                        class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
-
-                                    <div class="space-y-2 pointer-events-none">
-                                        <!-- PDF Icon Indicator -->
-                                        <div class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto text-slate-400"
-                                            :class="{ 'text-indigo-600': selectedFile }">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
+                                <a
+  :href="'http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/' + currentResumeName"
+  target="_blank"
+>
+                                    <div v-if="currentResumeName"
+                                        class="mt-2 flex items-center justify-between p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl">
+                                        <div class="flex items-center gap-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="w-8 h-8 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                             </svg>
+                                            <div>
+                                                <p class="text-xs font-semibold text-slate-700">Current Resume</p>
+                                                <p class="text-xs text-indigo-600 truncate max-w-[200px] sm:max-w-sm">{{
+                                                    resumeName }}</p>
+                                            </div>
                                         </div>
-
-                                        <!-- File info or prompt -->
-                                        <div class="text-xs">
-                                            <span v-if="!selectedFile" class="font-medium text-slate-600">
-                                                <span class="text-indigo-600 font-semibold underline">Click to
-                                                    upload</span> or drag and drop
-                                            </span>
-                                            <span v-else
-                                                class="font-semibold text-indigo-700 block truncate max-w-[250px] sm:max-w-md">
-                                                New file: {{ selectedFile.name }}
-                                            </span>
-                                            <p class="text-[11px] text-slate-400 mt-1">PDF format only (Max. 5MB). This
-                                                will overwrite the old resume.</p>
-                                        </div>
-
-                                        <!-- Preview File Metadata if newly selected -->
-                                        <div v-if="selectedFile"
-                                            class="inline-flex items-center gap-1 bg-indigo-100/50 text-indigo-800 text-[10px] px-2.5 py-0.5 rounded-full font-semibold">
-                                            Size: {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
-                                            <button type="button" @click.stop.prevent="clearSelectedFile"
-                                                class="ml-1 text-slate-500 hover:text-indigo-900 focus:outline-none font-bold text-xs pointer-events-auto">
-                                                &times;
-                                            </button>
-                                        </div>
+                                        <span
+                                            class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded uppercase">Stored</span>
                                     </div>
+                                    </a>
 
-                                </div>
+                                    <!-- Drag & Drop / Click Zone -->
+                                    <div class="mt-3 relative border-2 border-dashed rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center text-center cursor-pointer"
+                                        :class="selectedFile
+                                            ? 'border-indigo-500 bg-indigo-50/20'
+                                            : 'border-slate-200 hover:border-indigo-400 bg-slate-50/50 hover:bg-slate-50'">
+
+                                        <input type="file" accept="application/pdf" @change="handleFileChange"
+                                            class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
+
+                                        <div class="space-y-2 pointer-events-none">
+                                            <!-- PDF Icon Indicator -->
+                                            <div class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto text-slate-400"
+                                                :class="{ 'text-indigo-600': selectedFile }">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                                </svg>
+                                            </div>
+
+                                            <!-- File info or prompt -->
+                                            <div class="text-xs">
+                                                <span v-if="!selectedFile" class="font-medium text-slate-600">
+                                                    <span class="text-indigo-600 font-semibold underline">Click to
+                                                        upload</span> or drag and drop
+                                                </span>
+                                                <span v-else
+                                                    class="font-semibold text-indigo-700 block truncate max-w-[250px] sm:max-w-md">
+                                                    New file: {{ selectedFile.name }}
+                                                </span>
+                                                <p class="text-[11px] text-slate-400 mt-1">PDF format only (Max. 5MB).
+                                                    This
+                                                    will overwrite the old resume.</p>
+                                            </div>
+
+                                            <!-- Preview File Metadata if newly selected -->
+                                            <div v-if="selectedFile"
+                                                class="inline-flex items-center gap-1 bg-indigo-100/50 text-indigo-800 text-[10px] px-2.5 py-0.5 rounded-full font-semibold">
+                                                Size: {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
+                                                <button type="button" @click.stop.prevent="clearSelectedFile"
+                                                    class="ml-1 text-slate-500 hover:text-indigo-900 focus:outline-none font-bold text-xs pointer-events-auto">
+                                                    &times;
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
                             </div>
                         </div>
                         <!-- Message Banner -->
@@ -461,6 +469,7 @@ const newSkillInput = ref('')
 // File Upload Specific States
 const selectedFile = ref(null)
 const currentResumeName = ref('')
+const resumeName = ref('')
 const saveButtonText = ref("Save Changes");
 const originalStudent = ref(null);
 
@@ -473,6 +482,7 @@ const student = ref({
     completedYear: null,
     phone: '',
     location: '',
+    resume_path:'',
     socials: {
         linkedin: '',
         github: ''
@@ -556,7 +566,7 @@ onMounted(async () => {
             }
 
             // Set dynamic placeholders if backend returned empty
-            console.log(student)
+            // console.log(user)
             student.value.rollNo = user.roll_no || '2022CSE1024';
             student.value.branch = user.Branch || 'Computer Science & Engineering';
             student.value.completedYear = user.completed_year || 2026;
@@ -564,12 +574,20 @@ onMounted(async () => {
             student.value.location = user.current_location || 'Mumbai, Maharashtra';
             student.value.academics = user.academics || { cgpa: '8.92', backlogs: '0', twelfth: '92.4', tenth: '95.0' };
             student.value.skills = user.skills || ['JavaScript', 'Vue.js', 'Node.js', 'Tailwind CSS', 'Python'];
+            // student.resume_path = user.resume_path;
+            // console.log(student.resume_path)
             student.value.projects = user.projects || [
                 { title: 'College Placement Portal', techStack: 'Vue 3, Tailwind, Node.js', description: 'Developed a feature-rich portal helping college admin coordinate campus drives.' }
             ];
-
+            
             // Load existing filename if saved on the user model (e.g. user.resume_name)
-            currentResumeName.value = user.resume_name || 'resume_aarav.pdf';
+            currentResumeName.value = user.resume_path || 'Not available Any Resume';
+            resumeName.value = user.resume_path.split('/').pop().split('_').slice(2).join('_');
+            console.log(resumeName)
+            console.log(user.resume_path)
+            console.log(user.resume_path.split('/').pop().split('_'))
+            console.log(user.resume_path.split('/').pop().split('_').slice(2))
+            console.log(user.resume_path.split('/').pop().split('_').slice(2).join('_'))
             originalStudent.value = JSON.stringify(student.value);
             // console.log(originalStudent)
         }
@@ -614,17 +632,17 @@ const saveProfile = async () => {
         // formData.append('projects', JSON.stringify(student.value.projects))
 
         // Append the new PDF file to override the old file if chosen
-        // if (selectedFile.value) {
-        //     formData.append('resume', selectedFile.value)
-        // }
+        if (selectedFile.value) {
+            formData.append('resume', selectedFile.value)
+        }
 
         const res = await axios.post(
             "http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/api/updateUser.php",
             formData,
             {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
+                // headers: {
+                //     'Content-Type': 'multipart/form-data'
+                // },
                 withCredentials: true
             }
         );
