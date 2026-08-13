@@ -63,7 +63,7 @@
 
             <!-- Multi-Role Tab Switcher -->
             <div class="flex p-1 bg-slate-900/60 rounded-xl border border-white/5 mb-6 max-w-sm">
-              <button type="button" v-for="role in ['student', 'recruiter', 'coordinator']" :key="role"
+              <button type="button" v-for="role in ['student', 'Companies', 'Admin']" :key="role"
                 @click="selectedRole = role" :class="[
                   selectedRole === role
                     ? 'bg-blue-600 text-white shadow-md'
@@ -180,13 +180,17 @@
               </div>
             </form>
 
-            <div class="flex items-center my-6">
+            <!-- OR Divider -->
+            <div class="flex items-center my-5">
               <div class="flex-1 border-t border-slate-800"></div>
               <span class="px-3 text-xs text-slate-500 font-bold tracking-wider">OR</span>
               <div class="flex-1 border-t border-slate-800"></div>
             </div>
 
-            <p class="text-center text-sm text-slate-400">
+            <!-- Google Sign-In Button -->
+            <div id="googleButton" class="w-full flex justify-center"></div>
+
+            <p class="text-center text-sm text-slate-400 mt-5">
               Don't have an account?
               <RouterLink to="/register"
                 class="text-blue-400 font-bold hover:underline ml-1 transition-colors hover:text-blue-300">
@@ -223,6 +227,30 @@ onMounted(() => {
     id: i,
     style: `left:${Math.random() * 100}%;top:${Math.random() * 200}%;width:${4 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;animation-delay:${Math.random() * 2}s;animation-duration:${6 + Math.random() * 8}s;opacity:${0.15 + Math.random() * 0.25};`,
   }));
+  google.accounts.id.initialize({
+
+    client_id: "607600550963-ra73h56u6ajbrkbh8ddd38ij8umcdkq7.apps.googleusercontent.com", // provided by google cloud " LINK :- https://console.cloud.google.com/auth/clients?project=animated-falcon-504114-u0"
+
+    callback: handleGoogleResponse
+
+  });
+  google.accounts.id.renderButton(
+
+    document.getElementById("googleButton"),
+
+    {
+
+      theme: "outline",
+
+      size: "large",
+
+      width: 350
+
+    }
+
+  );
+
+
 });
 
 function createRipple(e) {
@@ -253,10 +281,10 @@ async function handleLogin() {
       }, {
       withCredentials: true
     });
-    
-// console.log("Response:", res.data);
-// console.log("Session ID:", res.data.session_id);
-// console.log("Session Data:", res.data.session_data);
+
+    // console.log("Response:", res.data);
+    // console.log("Session ID:", res.data.session_id);
+    // console.log("Session Data:", res.data.session_data);
 
     /* this line tells the browser save the cookie,
     inside the cookie available session_id, inside the session_id
@@ -282,6 +310,44 @@ async function handleLogin() {
     messageType.value = "error";
   } finally {
     loading.value = false;
+  }
+}
+async function handleGoogleResponse(response) {
+  // Clear any previous message
+  message.value = "";
+  messageType.value = "";
+  // console.log(response)
+
+  try {
+    const res = await axios.post(
+      "http://localhost/placementManagement/placement-management-system%20-%20Copy/placement-management-system1/backend/API/googleLogin.php",
+      { token: response.credential },
+      { withCredentials: true } //This is very important because it allows the browser to send and receive the PHP session cookie.
+      // https://chatgpt.com/c/6a527468-0f50-83ee-ad18-a528b2e4a1bd for "{ withCredentials: true }"
+    );
+
+    if (res.data.status) {
+      // ✅ Login success
+      message.value = "Login successful! Redirecting...";
+      messageType.value = "success";
+      localStorage.setItem("isLoggedIn", "true");
+      setTimeout(() => router.push("/dashboard"), 1000);
+
+    } else if (res.data.code === "NOT_REGISTERED") {
+      // ❌ User not registered — show "Please register first"
+      message.value = "⚠️ You are not registered yet! Please create an account first using \"Register with Google\" on the Register page.";
+      messageType.value = "error";
+
+    } else {
+      // ❌ Other error
+      message.value = res.data.message || "Google login failed. Please try again.";
+      messageType.value = "error";
+    }
+
+  } catch (err) {
+    console.error(err);
+    message.value = "Unable to connect to the server. Please try again.";
+    messageType.value = "error";
   }
 }
 </script>

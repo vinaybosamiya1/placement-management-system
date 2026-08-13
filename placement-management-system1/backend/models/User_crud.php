@@ -136,7 +136,10 @@ WHERE id=:id
         $query->bindParam(":completed_year", $completedYear);
         $query->bindParam(":phone", $phone);
         $query->bindParam(":location", $location);
-        $query->bindParam(":resume", $resume_path);
+        if($resume_path !== null){
+
+            $query->bindParam(":resume", $resume_path);
+            }
         $query->bindParam(":id", $id);
         $res = null;
         try {

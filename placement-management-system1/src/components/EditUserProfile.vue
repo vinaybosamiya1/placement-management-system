@@ -1,31 +1,40 @@
 <template>
-    <div class="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8 font-sans">
-        <div class="max-w-5xl mx-auto space-y-7">
+  <div class="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col relative overflow-x-hidden">
+    <!-- Ambient Background Lighting -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      <div class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-600/15 blur-[140px] animate-[pulse_10s_ease-in-out_infinite]"></div>
+      <div class="absolute top-[40%] right-[-10%] w-[35vw] h-[35vw] rounded-full bg-indigo-600/10 blur-[130px] animate-[pulse_12s_ease-in-out_infinite_2s]"></div>
+    </div>
+
+    <!-- Sticky Header Navbar -->
+    <Navbar class="relative z-50" />
+
+    <!-- Main Workspace Layout -->
+    <div class="flex-1 flex flex-col md:flex-row relative z-10 overflow-hidden">
+      <!-- Left Sidebar Navigation (Profile Active) -->
+      <LeftSidesection activeTab="Profile" />
+
+      <!-- Main Form Content Area -->
+      <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-h-[calc(100vh-80px)] space-y-6">
+        <div class="max-w-5xl mx-auto space-y-6">
 
             <!-- Breadcrumb / Back Link -->
             <div class="flex items-center justify-between">
                 <router-link to="/profile">
-                    <button
-                        class="cursor-pointer inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    <button class="cursor-pointer inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-blue-400 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
                         Back to Profile
                     </button>
                 </router-link>
-                <span class="text-xs text-slate-400">Last updated: Just now</span>
+                <span class="text-xs text-slate-400">Edit Mode</span>
             </div>
 
-
-
-
-            <!-- Page Title -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
-                <h1 class="text-2xl font-bold text-slate-800">Edit Your Profile</h1>
-                <p class="text-slate-500 text-sm mt-1">Update your personal details, academic scores, skills, and
-                    projects visible to recruiters.</p>
+            <!-- Page Title Card -->
+            <div class="bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+                <h1 class="text-2xl font-black text-white tracking-tight">Edit Your Student Profile</h1>
+                <p class="text-slate-400 text-xs mt-1">Update your personal details, academic scores, skills, and resume visible to campus recruiters.</p>
             </div>
 
             <!-- Main Split Layout -->
@@ -34,12 +43,12 @@
                 <!-- Left: Section Tabs -->
                 <div class="lg:col-span-1 space-y-2">
                     <button v-for="tab in formTabs" :key="tab.id" @click="activeFormTab = tab.id"
-                        class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+                        class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 cursor-pointer"
                         :class="activeFormTab === tab.id
-                            ? 'bg-indigo-50 text-indigo-700 font-semibold'
-                            : 'text-slate-600 hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-100'">
-                        <span v-html="tab.icon" class="w-5 h-5 shrink-0"
-                            :class="activeFormTab === tab.id ? 'text-indigo-600' : 'text-slate-400'"></span>
+                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold shadow-lg shadow-blue-500/20'
+                            : 'bg-slate-900/40 text-slate-300 border border-slate-800/80 hover:bg-slate-800/80 hover:text-white'">
+                        <span v-html="tab.icon" class="w-4 h-4 shrink-0"
+                            :class="activeFormTab === tab.id ? 'text-white' : 'text-blue-400'"></span>
                         {{ tab.name }}
                     </button>
                 </div>
@@ -47,7 +56,7 @@
                 <!-- Right: Form Area -->
                 <div class="lg:col-span-3">
                     <form @submit.prevent="saveProfile"
-                        class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        class="bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-800 text-slate-100 overflow-hidden">
 
                         <!-- Header of Form Section -->
                         <div class="border-b border-slate-100 p-6">
@@ -123,156 +132,109 @@
                                     class="mt-1 block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all duration-200" />
                             </div>
 
-                            <hr class="border-slate-100" />
+                            <hr class="border-slate-800" />
 
                             <!-- RESUME UPLOAD SECTION -->
                             <div>
-                                <label
-                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Resume
-                                    (PDF)</label>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Resume (PDF)</label>
 
                                 <!-- Show current uploaded resume info if available -->
-                                <a
-  :href="'http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/' + currentResumeName"
-  target="_blank"
->
-                                    <div v-if="currentResumeName"
-                                        class="mt-2 flex items-center justify-between p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl">
+                                <a :href="'http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/' + currentResumeName" target="_blank">
+                                    <div v-if="currentResumeName" class="mt-2 flex items-center justify-between p-3.5 bg-slate-950 border border-blue-500/30 rounded-2xl shadow-md">
                                         <div class="flex items-center gap-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="w-8 h-8 text-indigo-500 shrink-0" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                            <div>
-                                                <p class="text-xs font-semibold text-slate-700">Current Resume</p>
-                                                <p class="text-xs text-indigo-600 truncate max-w-[200px] sm:max-w-sm">{{
-                                                    resumeName }}</p>
-                                            </div>
-                                        </div>
-                                        <span
-                                            class="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded uppercase">Stored</span>
-                                    </div>
-                                    </a>
-
-                                    <!-- Drag & Drop / Click Zone -->
-                                    <div class="mt-3 relative border-2 border-dashed rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center text-center cursor-pointer"
-                                        :class="selectedFile
-                                            ? 'border-indigo-500 bg-indigo-50/20'
-                                            : 'border-slate-200 hover:border-indigo-400 bg-slate-50/50 hover:bg-slate-50'">
-
-                                        <input type="file" accept="application/pdf" @change="handleFileChange"
-                                            class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
-
-                                        <div class="space-y-2 pointer-events-none">
-                                            <!-- PDF Icon Indicator -->
-                                            <div class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto text-slate-400"
-                                                :class="{ 'text-indigo-600': selectedFile }">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
-                                                    viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                            <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>
                                             </div>
-
-                                            <!-- File info or prompt -->
-                                            <div class="text-xs">
-                                                <span v-if="!selectedFile" class="font-medium text-slate-600">
-                                                    <span class="text-indigo-600 font-semibold underline">Click to
-                                                        upload</span> or drag and drop
-                                                </span>
-                                                <span v-else
-                                                    class="font-semibold text-indigo-700 block truncate max-w-[250px] sm:max-w-md">
-                                                    New file: {{ selectedFile.name }}
-                                                </span>
-                                                <p class="text-[11px] text-slate-400 mt-1">PDF format only (Max. 5MB).
-                                                    This
-                                                    will overwrite the old resume.</p>
-                                            </div>
-
-                                            <!-- Preview File Metadata if newly selected -->
-                                            <div v-if="selectedFile"
-                                                class="inline-flex items-center gap-1 bg-indigo-100/50 text-indigo-800 text-[10px] px-2.5 py-0.5 rounded-full font-semibold">
-                                                Size: {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
-                                                <button type="button" @click.stop.prevent="clearSelectedFile"
-                                                    class="ml-1 text-slate-500 hover:text-indigo-900 focus:outline-none font-bold text-xs pointer-events-auto">
-                                                    &times;
-                                                </button>
+                                            <div>
+                                                <p class="text-xs font-bold text-white">Current Uploaded Resume</p>
+                                                <p class="text-xs text-blue-300 font-semibold truncate max-w-[200px] sm:max-w-sm">{{ resumeName }}</p>
                                             </div>
                                         </div>
-
+                                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2.5 py-1 rounded-full border border-emerald-500/30 uppercase">Active PDF</span>
                                     </div>
+                                </a>
+
+                                <!-- Drag & Drop Zone -->
+                                <div class="mt-3 relative border-2 border-dashed border-slate-700 hover:border-blue-500/50 bg-slate-950/60 hover:bg-slate-900/60 rounded-2xl p-6 transition-all duration-200 flex flex-col items-center justify-center text-center cursor-pointer">
+                                    <input type="file" accept="application/pdf" @change="handleFileChange" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
+
+                                    <div class="space-y-2 pointer-events-none">
+                                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto text-blue-400 shadow-md">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                            </svg>
+                                        </div>
+
+                                        <div class="text-xs">
+                                            <span v-if="!selectedFile" class="font-medium text-slate-300">
+                                                <span class="text-blue-400 font-bold underline">Click to upload</span> or drag and drop new resume
+                                            </span>
+                                            <span v-else class="font-bold text-blue-300 block truncate max-w-[250px] sm:max-w-md">
+                                                New file selected: {{ selectedFile.name }}
+                                            </span>
+                                            <p class="text-[11px] text-slate-400 mt-1">PDF format only (Max. 5MB).</p>
+                                        </div>
+
+                                        <div v-if="selectedFile" class="inline-flex items-center gap-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] px-2.5 py-0.5 rounded-full font-bold">
+                                            Size: {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <!-- Message Banner -->
-
 
                         <!-- 2. ACADEMICS & SOCIALS FORM -->
                         <div v-show="activeFormTab === 'academics'" class="p-6 space-y-6">
-
-                            <!-- Academic Overview Row -->
                             <div>
-                                <h3 class="text-sm font-semibold text-indigo-600 mb-3 uppercase tracking-wider">Academic
-                                    Marks</h3>
+                                <h3 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Academic Performance</h3>
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                     <div>
                                         <label class="block text-xs text-slate-400 font-medium">Current CGPA</label>
-                                        <input type="text" v-model="student.academics.cgpa"
-                                            class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all duration-200" />
+                                        <input type="text" v-model="student.academics.cgpa" class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-400 font-medium">Active Backlogs</label>
-                                        <input type="number" v-model="student.academics.backlogs"
-                                            class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all duration-200" />
+                                        <input type="number" v-model="student.academics.backlogs" class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-400 font-medium">Class 12th (%)</label>
-                                        <input type="text" v-model="student.academics.twelfth"
-                                            class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all duration-200" />
+                                        <input type="text" v-model="student.academics.twelfth" class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-400 font-medium">Class 10th (%)</label>
-                                        <input type="text" v-model="student.academics.tenth"
-                                            class="mt-1 block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all duration-200" />
+                                        <input type="text" v-model="student.academics.tenth" class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                     </div>
                                 </div>
                             </div>
 
-                            <hr class="border-slate-100" />
+                            <hr class="border-slate-800" />
 
                             <!-- Social Profiles Row -->
                             <div>
-                                <h3 class="text-sm font-semibold text-indigo-600 mb-3 uppercase tracking-wider">Social
-                                    Links</h3>
+                                <h3 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">Social & Professional Links</h3>
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-xs text-slate-400 font-medium">LinkedIn URL</label>
                                         <div class="mt-1 flex rounded-xl shadow-sm">
-                                            <span
-                                                class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-200 bg-slate-50 text-slate-500 text-sm">
+                                            <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium">
                                                 linkedin.com/in/
                                             </span>
-                                            <input type="text" v-model="student.socials.linkedin"
-                                                class="block w-full min-w-0 rounded-r-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all duration-200" />
+                                            <input type="text" v-model="student.socials.linkedin" class="block w-full min-w-0 rounded-r-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="block text-xs text-slate-400 font-medium">GitHub Profile
-                                            URL</label>
+                                        <label class="block text-xs text-slate-400 font-medium">GitHub Profile URL</label>
                                         <div class="mt-1 flex rounded-xl shadow-sm">
-                                            <span
-                                                class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-200 bg-slate-50 text-slate-500 text-sm">
+                                            <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium">
                                                 github.com/
                                             </span>
-                                            <input type="text" v-model="student.socials.github"
-                                                class="block w-full min-w-0 rounded-r-xl border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 focus:outline-none transition-all duration-200" />
+                                            <input type="text" v-model="student.socials.github" class="block w-full min-w-0 rounded-r-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <!-- 3. SKILLS & PROJECTS FORM -->
@@ -280,110 +242,62 @@
 
                             <!-- Skills Badge Input -->
                             <div>
-                                <label
-                                    class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Technical
-                                    & Soft Skills</label>
-                                <div
-                                    class="flex flex-wrap gap-2 p-3 border border-slate-200 rounded-xl min-h-[50px] items-center">
-                                    <span v-for="(skill, index) in student.skills" :key="index"
-                                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-semibold">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Technical & Soft Skills</label>
+                                <div class="flex flex-wrap gap-2 p-3 bg-slate-950 border border-slate-800 rounded-2xl min-h-[55px] items-center">
+                                    <span v-for="(skill, index) in student.skills" :key="index" class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/15 text-blue-300 border border-blue-500/30 rounded-xl text-xs font-bold shadow-sm">
                                         {{ skill }}
-                                        <button type="button" @click="removeSkill(index)"
-                                            class="cursor-pointer hover:text-indigo-900 focus:outline-none font-bold">
-                                            &times;
-                                        </button>
+                                        <button type="button" @click="removeSkill(index)" class="cursor-pointer hover:text-white font-bold">&times;</button>
                                     </span>
-                                    <input type="text" v-model="newSkillInput" @keydown.enter.prevent="addSkill"
-                                        @keydown.comma.prevent="addSkill" placeholder="Type skill and press Enter"
-                                        class="flex-1 min-w-[120px] text-xs text-slate-800 placeholder-slate-400 focus:outline-none py-1" />
+                                    <input type="text" v-model="newSkillInput" @keydown.enter.prevent="addSkill" @keydown.comma.prevent="addSkill" placeholder="Type skill & press Enter" class="flex-1 min-w-[140px] text-xs text-white placeholder-slate-500 bg-transparent focus:outline-none py-1" />
                                 </div>
-                                <p class="text-slate-400 text-[11px] mt-1.5">Press Enter or type a comma to generate a
-                                    new tag.</p>
+                                <p class="text-slate-400 text-[11px] mt-1.5">Press Enter or comma to create skill tag.</p>
                             </div>
 
-                            <hr class="border-slate-100" />
+                            <hr class="border-slate-800" />
 
-                            <!-- Dynamic Projects Manager -->
+                            <!-- Projects Manager -->
                             <div>
                                 <div class="flex justify-between items-center mb-4">
-                                    <label
-                                        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider">Key
-                                        Projects</label>
-                                    <button type="button" @click="addNewProject"
-                                        class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100 transition-colors">
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Key Projects</label>
+                                    <button type="button" @click="addNewProject" class="cursor-pointer inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md transition-all active:scale-95">
                                         + Add Project
                                     </button>
                                 </div>
 
                                 <div class="space-y-4">
-                                    <div v-for="(project, index) in student.projects" :key="index"
-                                        class="p-4 border border-slate-100 bg-slate-50/50 rounded-xl relative group">
-
-                                        <!-- Remove Project Button -->
-                                        <button type="button" @click="removeProject(index)"
-                                            class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-rose-600 transition-colors">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
+                                    <div v-for="(project, index) in student.projects" :key="index" class="p-4 border border-slate-800 bg-slate-950/80 rounded-2xl relative">
+                                        <button type="button" @click="removeProject(index)" class="cursor-pointer absolute top-4 right-4 text-slate-400 hover:text-rose-400 transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                         </button>
 
                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3 pr-8">
                                             <div>
-                                                <label class="block text-xs text-slate-400 font-medium">Project
-                                                    Title</label>
-                                                <input type="text" v-model="project.title"
-                                                    placeholder="e.g. Placement Portal" required
-                                                    class="mt-1 block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:border-indigo-500 focus:outline-none transition-all duration-200" />
+                                                <label class="block text-xs text-slate-400 font-medium">Project Title</label>
+                                                <input type="text" v-model="project.title" placeholder="Placement Portal" required class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                             </div>
                                             <div>
-                                                <label class="block text-xs text-slate-400 font-medium">Tech Stack
-                                                    Used</label>
-                                                <input type="text" v-model="project.techStack"
-                                                    placeholder="e.g. Vue 3, Node.js" required
-                                                    class="mt-1 block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:border-indigo-500 focus:outline-none transition-all duration-200" />
+                                                <label class="block text-xs text-slate-400 font-medium">Tech Stack</label>
+                                                <input type="text" v-model="project.techStack" placeholder="Vue 3, Node.js" required class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                             </div>
                                         </div>
                                         <div>
-                                            <label class="block text-xs text-slate-400 font-medium">Short
-                                                Description</label>
-                                            <textarea rows="2" v-model="project.description"
-                                                placeholder="Explain the key highlights of this project..." required
-                                                class="mt-1 block w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 focus:border-indigo-500 focus:outline-none transition-all duration-200"></textarea>
+                                            <label class="block text-xs text-slate-400 font-medium">Description</label>
+                                            <textarea rows="2" v-model="project.description" placeholder="Project details..." required class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-blue-500 focus:outline-none"></textarea>
                                         </div>
                                     </div>
 
-                                    <!-- Empty State for Projects -->
-                                    <div v-if="student.projects.length === 0"
-                                        class="text-center py-6 border border-dashed border-slate-200 rounded-xl">
-                                        <p class="text-slate-400 text-sm">No projects listed. Showcase your coding
-                                            builds here.</p>
+                                    <div v-if="student.projects.length === 0" class="text-center py-6 border border-dashed border-slate-800 rounded-2xl bg-slate-950/40">
+                                        <p class="text-slate-400 text-xs font-semibold">No projects added yet.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Form Sticky Footer Actions -->
-                        <div class="border-t border-slate-100 p-6 bg-slate-50/50 flex items-center justify-between">
-                            <!-- <span v-if="saveSuccess"
-                                class="text-emerald-600 text-xs font-semibold flex items-center gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-                                Saved successfully!
-                            </span> -->
+                        <!-- Sticky Footer Actions -->
+                        <div class="border-t border-slate-800/80 p-6 bg-slate-950/80 flex items-center justify-between">
                             <Transition name="shake">
-                                <div v-if="message" :class="[
-                                    messageType === 'success' ? 'text-emerald-400 border border-emerald-500/30 bg-emerald-950/40' : 'text-rose-400 border border-rose-800 bg-red-200',
-                                ]" class="message-banner">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
+                                <div v-if="message" :class="[messageType === 'success' ? 'text-emerald-400 border border-emerald-500/30 bg-emerald-950/40' : 'text-rose-400 border border-rose-800 bg-rose-950/40']" class="message-banner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                                     <span>{{ message }}</span>
                                 </div>
                                 <span v-else></span>
@@ -391,23 +305,12 @@
 
                             <div class="flex gap-3">
                                 <router-link to="/profile">
-
-                                    <button type="button" @click="goBack"
-                                        class="cursor-pointer px-5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold transition-all">
+                                    <button type="button" class="cursor-pointer px-5 py-2.5 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-bold transition-all">
                                         Cancel
                                     </button>
                                 </router-link>
-                                <button type="submit" :disabled="isSaving"
-                                    class="cursor-pointer px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white text-sm font-semibold shadow-sm transition-all flex items-center gap-2">
-                                    <svg v-if="isSaving" class="animate-spin h-4 w-4 text-white" fill="none"
-                                        viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
-                                    <!-- {{ isSaving ? "Saving..." : "Save Changes" }} -->
+                                <button type="submit" :disabled="isSaving" class="cursor-pointer px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white text-xs font-black shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2">
+                                    <svg v-if="isSaving" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                     {{ saveButtonText }}
                                 </button>
                             </div>
@@ -418,12 +321,16 @@
 
             </div>
         </div>
+      </main>
     </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, RouterLink } from "vue-router";
+import Navbar from './navbar.vue';
+import LeftSidesection from './leftsidesection.vue';
 import axios from 'axios'
 
 const router = useRouter();
@@ -731,5 +638,23 @@ const saveProfile = async () => {
     border-radius: 12px;
     font-size: 0.85rem;
     font-weight: 600;
+}
+
+input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="url"], select, textarea {
+    background-color: #020617 !important;
+    border-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+input::placeholder, textarea::placeholder {
+    color: #64748b !important;
+}
+label {
+    color: #94a3b8 !important;
+}
+h2, h3, h4 {
+    color: #ffffff !important;
+}
+.border-b, .border-t, .border-slate-100, .border-slate-200 {
+    border-color: #1e293b !important;
 }
 </style>

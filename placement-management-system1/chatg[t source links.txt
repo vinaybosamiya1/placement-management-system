@@ -1,0 +1,1 @@
+https://chatgpt.com/c/6a527468-0f50-83ee-ad18-a528b2e4a1bd for "{ withCredentials: true }"

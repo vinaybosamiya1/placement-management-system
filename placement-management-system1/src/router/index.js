@@ -18,10 +18,28 @@ const routes = [
         }
     },
     {
+        path: "/job-listings", name: 'job-listings', component: () => import('../components/Dashboard.vue'), 
+        meta: {
+            requiresAuth:true,
+        }
+    },
+    {
+        path: "/my-applications", name: 'my-applications', component: () => import('../components/Dashboard.vue'), 
+        meta: {
+            requiresAuth:true,
+        }
+    },
+    {
         path:"/profile", name:'profile',component: ()=>import("../components/userProfile.vue"),meta:{requiresAuth:true}
     },
     {
         path:"/editprofile", name:'editprofile',component: ()=>import("../components/EditUserProfile.vue"),meta:{requiresAuth:true}
+    },
+    {
+        path: "/set-password", name: 'set-password', component: () => import('../components/Dashboard.vue'), meta: { requiresAuth: true }
+    },
+    {
+        path: "/reset-password", name: 'reset-password', component: () => import('../components/Dashboard.vue'), meta: { requiresAuth: true }
     },
 ]
 

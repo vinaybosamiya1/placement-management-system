@@ -59,7 +59,7 @@
             <div class="flex p-1 bg-slate-900/60 rounded-xl border border-white/5 mb-6 max-w-sm">
               <button 
                 type="button" 
-                v-for="role in ['student', 'recruiter', 'coordinator']" 
+                v-for="role in ['student', 'Companies', 'Admin']" 
                 :key="role"
                 @click="selectedRole = role"
                 :class="[
@@ -249,13 +249,32 @@
               </div>
             </form>
 
-            <div class="flex items-center my-6">
+            <!-- OR Divider -->
+            <div class="flex items-center my-5">
               <div class="flex-1 border-t border-slate-800"></div>
               <span class="px-3 text-xs text-slate-500 font-bold tracking-wider">OR</span>
               <div class="flex-1 border-t border-slate-800"></div>
             </div>
 
-            <p class="text-center text-sm text-slate-400">
+            <!-- Google Register Button -->
+            <div id="googleRegisterButton" class="w-full flex justify-center"></div>
+
+            <!-- Google message banner -->
+            <Transition name="shake">
+              <div v-if="googleMessage" :class="[
+                googleMessageType === 'success' ? 'text-emerald-400 border border-emerald-500/30 bg-emerald-950/40' : 'text-rose-400 border border-rose-500/30 bg-rose-950/40',
+              ]" class="message-banner mt-4">
+                <svg v-if="googleMessageType === 'error'" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{ googleMessage }}</span>
+              </div>
+            </Transition>
+
+            <p class="text-center text-sm text-slate-400 mt-5">
               Already have an account?
               <RouterLink to="/login" class="text-blue-400 font-bold hover:underline ml-1 transition-colors hover:text-blue-300">
                 Login Here →
@@ -289,12 +308,25 @@ const success = ref(false);
 const particles = ref([]);
 
 
+const googleMessage = ref("");
+const googleMessageType = ref("");
+
 onMounted(() => {
-  // Density and style from Code 1, applied to the dark background seamlessly
   particles.value = Array.from({ length: 200 }, (_, i) => ({
     id: i,
     style: `left:${Math.random() * 100}%;top:${Math.random() * 200}%;width:${4 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;animation-delay:${Math.random() * 2}s;animation-duration:${6 + Math.random() * 8}s;opacity:${0.15 + Math.random() * 0.25};`,
   }));
+
+  // Initialize Google Sign-In for REGISTRATION
+  google.accounts.id.initialize({
+    client_id: "607600550963-ra73h56u6ajbrkbh8ddd38ij8umcdkq7.apps.googleusercontent.com",
+    callback: handleGoogleRegister
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById("googleRegisterButton"),
+    { theme: "outline", size: "large", text: "signup_with", width: 350 }
+  );
 });
 
 // Computed properties for Password Validation UI
@@ -355,6 +387,46 @@ async function handleRegister() {
   // Fake brief delay for UI smooth feeling if network was extremely fast
   await new Promise((r) => setTimeout(r, 800));
   loading.value = false;
+}
+
+// -----------------------------------------------------------------------
+// Google Register Handler
+// -----------------------------------------------------------------------
+async function handleGoogleRegister(response) {
+  googleMessage.value = "";
+  googleMessageType.value = "";
+
+  try {
+    const res = await axios.post(
+      "http://localhost/placementManagement/placement-management-system%20-%20Copy/placement-management-system1/backend/API/googleRegister.php",
+      { token: response.credential },
+      { withCredentials: true }
+    );
+
+    if (res.data.status) {
+      // ✅ Registration success — go to Set Password page
+      googleMessage.value = "✅ Account created! Setting up your password...";
+      googleMessageType.value = "success";
+      localStorage.setItem("isLoggedIn", "true");
+      // Save email so SetPasswordView can show it
+      localStorage.setItem("googleUserEmail", res.data.user?.email || "");
+      setTimeout(() => router.push("/set-password"), 1200);
+
+    } else if (res.data.code === "ALREADY_REGISTERED") {
+      // ❌ Already registered — tell them to login
+      googleMessage.value = "⚠️ This Google account is already registered! Please go to the Login page.";
+      googleMessageType.value = "error";
+
+    } else {
+      googleMessage.value = res.data.message || "Google registration failed. Please try again.";
+      googleMessageType.value = "error";
+    }
+
+  } catch (err) {
+    console.error(err);
+    googleMessage.value = "Unable to connect to the server. Please try again.";
+    googleMessageType.value = "error";
+  }
 }
 </script>
 

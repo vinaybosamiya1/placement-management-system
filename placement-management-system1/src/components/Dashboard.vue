@@ -1,12 +1,19 @@
-<!-- 6-7-26 created dashboard.vue file for show navbar and leftsidesection -->
 <script setup>
-import Navbar from './navbar.vue';
-import leftsidesection from './leftsidesection.vue';
+import { ref, onMounted } from 'vue';
+import StudentDashboard from './StudentDashboard.vue';
+import AdminDashboard from '../views/AdminDashboard.vue';
 
+const userRole = ref(localStorage.getItem('userRole') || 'student');
+
+onMounted(() => {
+  const role = localStorage.getItem('userRole');
+  if (role) {
+    userRole.value = role;
+  }
+});
 </script>
 
 <template>
-  <Navbar />
-  <leftsidesection/>
- 
+  <AdminDashboard v-if="userRole === 'Admin'" />
+  <StudentDashboard v-else />
 </template>
