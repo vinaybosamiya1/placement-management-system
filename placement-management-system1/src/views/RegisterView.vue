@@ -398,7 +398,7 @@ async function handleGoogleRegister(response) {
 
   try {
     const res = await axios.post(
-      "http://localhost/placementManagement/placement-management-system%20-%20Copy/placement-management-system1/backend/API/googleRegister.php",
+      "http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/googleRegister.php",
       { token: response.credential },
       { withCredentials: true }
     );

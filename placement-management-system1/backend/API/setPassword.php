@@ -55,7 +55,7 @@ $conn = $db->connect();
 $hashed = password_hash($new_password, PASSWORD_DEFAULT);
 
 $stmt = $conn->prepare(
-    "UPDATE users_persontal_details SET password = :password WHERE id = :id"
+    "UPDATE users SET password = :password WHERE id = :id"
 );
 $stmt->execute([
     ':password' => $hashed,

@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require "../config/database.php";
+require "../models/User_crud.php";
 
 // -------------------------------------------------------------------
 // 1. Read the Google credential token from the frontend
@@ -38,6 +39,10 @@ function decodeGoogleJWT($token) {
     if (count($parts) !== 3) {
         return null;
     }
+    // $parts[0]; // Header
+    // $parts[1]; // Payload
+    // $parts[2]; // Signature
+    
     // Base64url decode the payload (middle part)
     $payload = $parts[1];
     // Add padding if needed
@@ -82,7 +87,7 @@ if (empty($email)) {
 $db   = new Database();
 $conn = $db->connect();
 
-$stmt = $conn->prepare("SELECT * FROM users_persontal_details WHERE email = :email LIMIT 1");
+$stmt = $conn->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
 $stmt->bindParam(':email', $email);
 $stmt->execute();
 $existing_user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -103,9 +108,12 @@ if (!$existing_user) {
 // 7. User IS registered → log them in
 // -------------------------------------------------------------------
 if (empty($existing_user['google_id'])) {
-    $upd = $conn->prepare("UPDATE users_persontal_details SET google_id = :gid WHERE email = :email");
+    $upd = $conn->prepare("UPDATE users SET google_id = :gid WHERE email = :email");
     $upd->execute([':gid' => $google_id, ':email' => $email]);
 }
+
+$userModel = new User($conn);
+$userModel->ensureStudentProfile($existing_user['id'], $google_id);
 
 $_SESSION['user_id']    = $existing_user['id'];
 $_SESSION['user_email'] = $existing_user['email'];

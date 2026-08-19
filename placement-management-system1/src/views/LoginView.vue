@@ -320,11 +320,12 @@ async function handleGoogleResponse(response) {
 
   try {
     const res = await axios.post(
-      "http://localhost/placementManagement/placement-management-system%20-%20Copy/placement-management-system1/backend/API/googleLogin.php",
+      "http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/googleLogin.php",
       { token: response.credential },
       { withCredentials: true } //This is very important because it allows the browser to send and receive the PHP session cookie.
       // https://chatgpt.com/c/6a527468-0f50-83ee-ad18-a528b2e4a1bd for "{ withCredentials: true }"
     );
+    
 
     if (res.data.status) {
       // ✅ Login success

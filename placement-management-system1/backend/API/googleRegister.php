@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require "../config/database.php";
+require "../models/User_crud.php";
 
 // -------------------------------------------------------------------
 // 1. Read the Google credential token from the frontend
@@ -79,7 +80,7 @@ if (empty($email)) {
 $db   = new Database();
 $conn = $db->connect();
 
-$stmt = $conn->prepare("SELECT id FROM users_persontal_details WHERE email = :email LIMIT 1");
+$stmt = $conn->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
 $stmt->bindParam(':email', $email);
 $stmt->execute();
 $existing_user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -101,7 +102,7 @@ if ($existing_user) {
 // -------------------------------------------------------------------
 try {
     $ins = $conn->prepare(
-        "INSERT INTO users_persontal_details
+        "INSERT INTO users
          (full_name, email, google_id, password)
          VALUES
          (:full_name, :email, :google_id, :password)"
@@ -118,6 +119,9 @@ try {
     ]);
 
     $new_user_id = $conn->lastInsertId();
+
+    $userModel = new User($conn);
+    $userModel->ensureStudentProfile($new_user_id, $google_id);
 
     // Start session — log the user in right after registration
     $_SESSION['user_id']    = $new_user_id;

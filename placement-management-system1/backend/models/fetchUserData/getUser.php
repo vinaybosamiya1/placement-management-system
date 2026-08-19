@@ -26,19 +26,28 @@ try {
     }
 
     $stmt = $conn->prepare("SELECT
-id,
-first_name,
-last_name,
-full_name,
-email,
-phone_number,
-roll_no,
-Branch,
-current_location,
-completed_year,
-resume_path
-FROM users_persontal_details
-WHERE id=?");
+u.id,
+u.first_name,
+u.last_name,
+u.full_name,
+u.email,
+u.phone_number,
+COALESCE(sp.roll_no, u.roll_no) AS roll_no,
+COALESCE(sp.Branch, u.Branch) AS Branch,
+COALESCE(sp.current_location, u.current_location) AS current_location,
+COALESCE(sp.completed_year, u.completed_year) AS completed_year,
+COALESCE(sp.resume_path, u.resume_path) AS resume_path,
+sp.cgpa,
+sp.backlogs,
+sp.twelfth_percentage,
+sp.tenth_percentage,
+sp.linkedin_url,
+sp.github_url,
+sp.skills,
+sp.projects
+FROM users u
+LEFT JOIN student_profiles sp ON u.id = sp.user_id
+WHERE u.id=?");
     $stmt->execute([$_SESSION['user_id']]);
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
