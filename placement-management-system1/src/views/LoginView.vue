@@ -227,30 +227,27 @@ onMounted(() => {
     id: i,
     style: `left:${Math.random() * 100}%;top:${Math.random() * 200}%;width:${4 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;animation-delay:${Math.random() * 2}s;animation-duration:${6 + Math.random() * 8}s;opacity:${0.15 + Math.random() * 0.25};`,
   }));
-  google.accounts.id.initialize({
+  const initGoogle = () => {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      google.accounts.id.initialize({
+        client_id: "607600550963-ra73h56u6ajbrkbh8ddd38ij8umcdkq7.apps.googleusercontent.com", // provided by google cloud " LINK :- https://console.cloud.google.com/auth/clients?project=animated-falcon-504114-u0"
+        callback: handleGoogleResponse
+      });
 
-    client_id: "607600550963-ra73h56u6ajbrkbh8ddd38ij8umcdkq7.apps.googleusercontent.com", // provided by google cloud " LINK :- https://console.cloud.google.com/auth/clients?project=animated-falcon-504114-u0"
-
-    callback: handleGoogleResponse
-
-  });
-  google.accounts.id.renderButton(
-
-    document.getElementById("googleButton"),
-
-    {
-
-      theme: "outline",
-
-      size: "large",
-
-      width: 350
-
+      google.accounts.id.renderButton(
+        document.getElementById("googleButton"),
+        {
+          theme: "outline",
+          size: "large",
+          width: 350
+        }
+      );
+    } else {
+      setTimeout(initGoogle, 100);
     }
+  };
 
-  );
-
-
+  initGoogle();
 });
 
 function createRipple(e) {
@@ -326,7 +323,7 @@ async function handleGoogleResponse(response) {
       // https://chatgpt.com/c/6a527468-0f50-83ee-ad18-a528b2e4a1bd for "{ withCredentials: true }"
     );
     
-
+      console.log(res.data.status)
     if (res.data.status) {
       // ✅ Login success
       message.value = "Login successful! Redirecting...";

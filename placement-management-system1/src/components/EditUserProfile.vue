@@ -55,7 +55,7 @@
 
                 <!-- Right: Form Area -->
                 <div class="lg:col-span-3">
-                    <form @submit.prevent="saveProfile"
+                    <form  @submit.prevent="saveProfile"
                         class="bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-800 text-slate-100 overflow-hidden">
 
                         <!-- Header of Form Section -->
@@ -219,7 +219,7 @@
                                         <label class="block text-xs text-slate-400 font-medium">LinkedIn URL</label>
                                         <div class="mt-1 flex rounded-xl shadow-sm">
                                             <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium">
-                                                linkedin.com/in/
+                                                <img src="../../public/linkedin.png" class="w-8 h-7 rounded-full"alt="">
                                             </span>
                                             <input type="text" v-model="student.socials.linkedin" class="block w-full min-w-0 rounded-r-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                         </div>
@@ -228,7 +228,8 @@
                                         <label class="block text-xs text-slate-400 font-medium">GitHub Profile URL</label>
                                         <div class="mt-1 flex rounded-xl shadow-sm">
                                             <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-800 bg-slate-950 text-slate-400 text-xs font-medium">
-                                                github.com/
+                                                
+                                                <img src="../../public/github.gif" class="w-8 h-7 rounded-full"alt="">
                                             </span>
                                             <input type="text" v-model="student.socials.github" class="block w-full min-w-0 rounded-r-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                         </div>
@@ -248,7 +249,7 @@
                                         {{ skill }}
                                         <button type="button" @click="removeSkill(index)" class="cursor-pointer hover:text-white font-bold">&times;</button>
                                     </span>
-                                    <input type="text" v-model="newSkillInput" @keydown.enter.prevent="addSkill" @keydown.comma.prevent="addSkill" placeholder="Type skill & press Enter" class="flex-1 min-w-[140px] text-xs text-white placeholder-slate-500 bg-transparent focus:outline-none py-1" />
+                                    <input type="text" id="skillsinput" v-model="newSkillInput" @keydown.enter.prevent="addSkill" @keydown.comma.prevent="addSkill" placeholder="Type Skill & Press Enter" value="" class="flex-1 min-w-[140px] text-sm text-white placeholder-slate-500 bg-transparent focus:outline-none py-1" />
                                 </div>
                                 <p class="text-slate-400 text-[11px] mt-1.5">Press Enter or comma to create skill tag.</p>
                             </div>
@@ -336,6 +337,7 @@ import axios from 'axios'
 const router = useRouter();
 
 
+
 // Sidebar settings tabs
 const activeFormTab = ref('personal')
 const formTabs = [
@@ -407,6 +409,7 @@ const student = ref({
 // Skills modifier methods
 const addSkill = () => {
     const cleanedSkill = newSkillInput.value.trim().replace(/,$/, '')
+
     if (cleanedSkill && !student.value.skills.includes(cleanedSkill)) {
         student.value.skills.push(cleanedSkill)
     }
@@ -463,6 +466,7 @@ onMounted(async () => {
 
         if (res.data.success) {
             const user = res.data.user;
+            console.log(user)
 
             // Hydrating first name and last name split
             if (user.full_name) {
@@ -480,7 +484,9 @@ onMounted(async () => {
             student.value.phone = user.phone_number || '+91 98765 43210';
             student.value.location = user.current_location || 'Mumbai, Maharashtra';
             student.value.academics = user.academics || { cgpa: '8.92', backlogs: '0', twelfth: '92.4', tenth: '95.0' };
-            student.value.skills = user.skills || ['JavaScript', 'Vue.js', 'Node.js', 'Tailwind CSS', 'Python'];
+            student.value.skills = user.skills?? [''];
+            
+            // student.value.skills = user.skills;
             // student.resume_path = user.resume_path;
             // console.log(student.resume_path)
             student.value.projects = user.projects || [
@@ -489,14 +495,26 @@ onMounted(async () => {
             
             // Load existing filename if saved on the user model (e.g. user.resume_name)
             currentResumeName.value = user.resume_path || 'Not available Any Resume';
+            student.value.socials.github = user.github_url; //github
+            student.value.socials.linkedin = user.linkedin_url; //linkedin
+
+            student.value.academics.cgpa = user.cgpa
+            student.value.academics.backlogs = user.backlogs
+            student.value.academics.twelfth = user.twelfth_percentage
+            student.value.academics.tenth = user.tenth_percentage
+            // console.log(git)
+            // console.log(student.value.academics)
+
+            
             resumeName.value = user.resume_path.split('/').pop().split('_').slice(2).join('_');
-            console.log(resumeName)
-            console.log(user.resume_path)
-            console.log(user.resume_path.split('/').pop().split('_'))
-            console.log(user.resume_path.split('/').pop().split('_').slice(2))
-            console.log(user.resume_path.split('/').pop().split('_').slice(2).join('_'))
+            // console.log(resumeName)
+            // console.log(user.resume_path)
+            // console.log(user.resume_path.split('/').pop().split('_'))
+            // console.log(user.resume_path.split('/').pop().split('_').slice(2))
+            // console.log(user.resume_path.split('/').pop().split('_').slice(2).join('_'))
             originalStudent.value = JSON.stringify(student.value);
             // console.log(originalStudent)
+            // console.log(student.value)
         }
     } catch (err) {
         console.error("Error retrieving student database settings", err);
@@ -531,6 +549,14 @@ const saveProfile = async () => {
         formData.append('completedYear', student.value.completedYear)
         formData.append('phone', student.value.phone)
         formData.append('location', student.value.location)
+        formData.append('cgpa',student.value.academics.cgpa)
+        formData.append('backlogs',student.value.academics.backlogs)
+        formData.append('twelfth',student.value.academics.twelfth)
+        formData.append('tenth',student.value.academics.tenth)
+        formData.append('github',student.value.socials.github)
+        formData.append('linkedin',student.value.socials.linkedin)
+        formData.append('skills',JSON.stringify(student.value.skills))
+        // formData.append('studentprofileId',student.value.studentprofileId)
 
         // // Serialize object data to JSON strings (so PHP $_POST receives readable strings)
         // formData.append('socials', JSON.stringify(student.value.socials))
@@ -544,7 +570,7 @@ const saveProfile = async () => {
         }
 
         const res = await axios.post(
-            "http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/api/updateUser.php",
+            "http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/updateUser.php",
             formData,
             {
                 // headers: {
@@ -553,7 +579,7 @@ const saveProfile = async () => {
                 withCredentials: true
             }
         );
-        //console.log(res.data)
+        // console.log(res.data)
         // console.log(res);
 
         if (res.data.success) {
@@ -599,6 +625,8 @@ const saveProfile = async () => {
         }
     }
 }
+
+
 </script>
 
 <style scoped>
@@ -647,6 +675,9 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 input::placeholder, textarea::placeholder {
     color: #64748b !important;
+}
+#skillsinput::placeholder{
+    color: #d7e8ff !important;
 }
 label {
     color: #94a3b8 !important;

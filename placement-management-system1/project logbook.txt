@@ -20,3 +20,6 @@ i improving UI of login, register, profile 3 file's ui and creaeted new file as 
 
 created at 21-7-26 and this code transfer at user_crud.php file in 25-7-26
 27 - 7-26 performing update operatio in users profile and user can upload own resume
+
+28-8-26 so i have added reset password page and forget password page and i resume.pdf button is worked now user click to open resume and same as user edit profile add 
+resume (pdf) with current uploaded resume , if user need to update your resume that is possible , user can upload new or updated resume

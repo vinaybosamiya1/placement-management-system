@@ -35,12 +35,15 @@ const routes = [
     {
         path:"/editprofile", name:'editprofile',component: ()=>import("../components/EditUserProfile.vue"),meta:{requiresAuth:true}
     },
+    // {
+    //     path: "/set-password", name: 'set-password', component: () => import('../views/SetPasswordView.vue'), meta: { requiresAuth: true }
+    // },
     {
-        path: "/set-password", name: 'set-password', component: () => import('../components/Dashboard.vue'), meta: { requiresAuth: true }
+        path: "/forget-password", name: 'forget-password', component: () => import('../views/SetPasswordView.vue'), meta: { requiresAuth: true }
     },
-    {
-        path: "/reset-password", name: 'reset-password', component: () => import('../components/Dashboard.vue'), meta: { requiresAuth: true }
-    },
+    // {
+    //     path: "/reset-password", name: 'reset-password', component: () => import('../components/Dashboard.vue'), meta: { requiresAuth: true }
+    // },
 ]
 
 const router = createRouter({ history: createWebHistory(import.meta.env.BASH_URL), routes })

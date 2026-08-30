@@ -32,26 +32,100 @@ u.last_name,
 u.full_name,
 u.email,
 u.phone_number,
-COALESCE(sp.roll_no, u.roll_no) AS roll_no,
-COALESCE(sp.Branch, u.Branch) AS Branch,
-COALESCE(sp.current_location, u.current_location) AS current_location,
-COALESCE(sp.completed_year, u.completed_year) AS completed_year,
-COALESCE(sp.resume_path, u.resume_path) AS resume_path,
+-- COALESCE(sp.roll_no, u.roll_no) AS roll_no,
+-- COALESCE(sp.Branch, u.Branch) AS Branch,
+-- COALESCE(sp.current_location, u.current_location) AS current_location,
+-- COALESCE(sp.completed_year, u.completed_year) AS completed_year,
+-- COALESCE(sp.resume_path, u.resume_path) AS resume_path,
+u.roll_no,
+sp.id AS student_profile_id,
+sp.branch,
+sp.current_location,
+sp.completed_year,
+sp.resume_path,
 sp.cgpa,
 sp.backlogs,
 sp.twelfth_percentage,
 sp.tenth_percentage,
 sp.linkedin_url,
-sp.github_url,
-sp.skills,
-sp.projects
+sp.github_url
+-- sp.skills,
+-- sp.projects
 FROM users u
 LEFT JOIN student_profiles sp ON u.id = sp.user_id
-WHERE u.id=?");
+WHERE u.id=? LIMIT 1
+");
     $stmt->execute([$_SESSION['user_id']]);
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    /*
+    ==========================================
+    USER NOT FOUND
+    ==========================================
+    */
+
+    if (!$user) {
+
+        echo json_encode([
+            "success" => false,
+            "message" => "User not found"
+        ]);
+
+        exit;
+    }
+    /*
+    ==========================================
+    FETCH ALL SKILLS
+    ==========================================
+    */
+
+    $skillsSql = "
+
+        SELECT skill
+
+        FROM skills
+
+        WHERE student_profile_id = ?
+
+        ORDER BY id ASC
+
+    ";
+    $skillsStmt = $conn->prepare($skillsSql);
+
+    $skillsStmt->execute([$user['student_profile_id']]);
+
+    /*
+    fetchAll(PDO::FETCH_COLUMN)
+
+    Converts:
+
+    [
+        ['skill' => 'JavaScript'],
+        ['skill' => 'Vue.js'],
+        ['skill' => 'PHP']
+    ]
+
+    Into:
+
+    [
+        'JavaScript',
+        'Vue.js',
+        'PHP'
+    ]
+    */
+
+    $skills = $skillsStmt->fetchAll(PDO::FETCH_COLUMN);
+
+    /*
+    ==========================================
+    ADD SKILLS TO USER ARRAY (simply adds a new key called skills into the PHP array. 
+    -> change the api response "(It only prepares your API response.)")
+    ==========================================
+    */
+    $user['skills'] = $skills;
+    
+    
     echo json_encode([
         "success" => true,
         "user" => $user

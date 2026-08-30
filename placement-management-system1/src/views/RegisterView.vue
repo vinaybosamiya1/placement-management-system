@@ -317,16 +317,23 @@ onMounted(() => {
     style: `left:${Math.random() * 100}%;top:${Math.random() * 200}%;width:${4 + Math.random() * 10}px;height:${6 + Math.random() * 10}px;animation-delay:${Math.random() * 2}s;animation-duration:${6 + Math.random() * 8}s;opacity:${0.15 + Math.random() * 0.25};`,
   }));
 
-  // Initialize Google Sign-In for REGISTRATION
-  google.accounts.id.initialize({
-    client_id: "607600550963-ra73h56u6ajbrkbh8ddd38ij8umcdkq7.apps.googleusercontent.com",
-    callback: handleGoogleRegister
-  });
+  const initGoogleRegister = () => {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      google.accounts.id.initialize({
+        client_id: "607600550963-ra73h56u6ajbrkbh8ddd38ij8umcdkq7.apps.googleusercontent.com",
+        callback: handleGoogleRegister
+      });
 
-  google.accounts.id.renderButton(
-    document.getElementById("googleRegisterButton"),
-    { theme: "outline", size: "large", text: "signup_with", width: 350 }
-  );
+      google.accounts.id.renderButton(
+        document.getElementById("googleRegisterButton"),
+        { theme: "outline", size: "large", text: "signup_with", width: 350 }
+      );
+    } else {
+      setTimeout(initGoogleRegister, 100);
+    }
+  };
+
+  initGoogleRegister();
 });
 
 // Computed properties for Password Validation UI

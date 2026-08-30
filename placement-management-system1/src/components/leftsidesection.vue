@@ -102,10 +102,16 @@ const handleClick = (title) => {
         Logout();
     } else if (title === "Profile") {
         router.push('/profile');
-    } else if (title === "Reset Password") {
-        router.push('/set-password');
-        emit("tab-selected", "Reset Password");
-    } else if (title === "Dashboard") {
+    } 
+    // else if (title === "Reset Password") {
+    //     router.push('/set-password');
+    //     emit("tab-selected", "Reset Password");
+    // }
+    else if (title === "Reset Password") {
+        router.push('/forget-password');
+        emit("tab-selected", "Forget Password");
+    }
+     else if (title === "Dashboard") {
         router.push('/dashboard');
         emit("tab-selected", "Dashboard");
     } else if (title === "Job Listing") {

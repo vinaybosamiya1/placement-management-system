@@ -24,6 +24,8 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$skillsJson = $_POST['skills'] ?? "[]";
+
 $firstName     = trim($_POST["firstName"] ?? "");
 $lastName      = trim($_POST["lastName"] ?? "");
 $fullName      = trim($_POST["fullName"] ?? "");
@@ -32,6 +34,19 @@ $branch        = trim($_POST["branch"] ?? "");
 $completedYear = trim($_POST["completedYear"] ?? "");
 $phone         = trim($_POST["phone"] ?? "");
 $location      = trim($_POST["location"] ?? "");
+$cgpa          = trim($_POST['cgpa']??'9.0');
+$backlogs      = trim($_POST['backlogs']??'0');
+$twelfth       = trim($_POST['twelfth']??'80');
+$tenth         = trim($_POST['tenth']??'90');
+$github        = trim($_POST['github']??strtoupper('add github link'));
+$linkedin      = trim($_POST['linkedin']??strtoupper('add linkedin url'));
+$skills        = json_decode($skillsJson, true);
+$studentprofileId = trim($_POST['studentprofileId']??"");
+
+// checks the $skills is array or not if not array to become empty array of $skills
+if (!is_array($skills)) {
+    $skills = [];
+}
  
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     echo json_encode([
@@ -102,12 +117,26 @@ $result = $updateProfile->updateProfile(
     $location,
 
     $resumePath,
+    
+    $cgpa,
 
+    $backlogs,
+
+    $twelfth,
+
+    $tenth,
+
+    $github,
+
+    $linkedin,
+
+    $skills
+    // $studentprofileId,
+    
     // $socials,
 
     // $academics,
 
-    // $skills,
 
     // $projects
 

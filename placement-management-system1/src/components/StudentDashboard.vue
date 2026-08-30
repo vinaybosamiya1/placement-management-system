@@ -80,8 +80,12 @@
         />
 
         <!-- ================= TAB 4: RESET PASSWORD ================= -->
-        <StudentResetPassword 
+        <!-- <StudentResetPassword 
           v-else-if="activeTab === 'Reset Password'" 
+        /> -->
+        <StudentResetPassword 
+          v-else-if="activeTab === 'Forget Password'" 
+          
         />
 
       </main>
@@ -114,8 +118,9 @@ function updateActiveTabFromRoute(path) {
     activeTab.value = 'Job Listing';
   } else if (path === '/my-applications') {
     activeTab.value = 'My Application';
-  } else if (path === '/set-password' || path === '/reset-password') {
-    activeTab.value = 'Reset Password';
+  } else if (path === '/set-password' || path === '/reset-password' || path === '/forget-password') {
+    // activeTab.value = 'Reset Password';
+    activeTab.value = 'Forget Password';
   } else {
     activeTab.value = 'Dashboard';
   }

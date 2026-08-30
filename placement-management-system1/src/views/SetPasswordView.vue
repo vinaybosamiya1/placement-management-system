@@ -52,7 +52,7 @@
 
               <div class="w-full pt-4">
                 <button @click="skipAndGoToDashboard"
-                  class="w-full max-w-[160px] cursor-pointer border border-emerald-300/50 hover:border-white text-emerald-100/80 hover:text-white font-bold rounded-full py-1.5 px-6 text-xs bg-white/5 hover:bg-white/10 active:scale-95 transition-all duration-300 uppercase tracking-widest">
+                  class="w-full max-w-[180px] py-3 cursor-pointer border border-emerald-300/50 hover:border-white text-emerald-100/80 hover:text-white font-bold rounded-full py-2.5 px-6 text-xs bg-white/5 hover:bg-white/10 active:scale-95 transition-all duration-300 uppercase tracking-widest">
                   Skip for now →
                 </button>
               </div>

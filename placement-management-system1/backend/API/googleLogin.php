@@ -108,7 +108,7 @@ if (!$existing_user) {
 // 7. User IS registered → log them in
 // -------------------------------------------------------------------
 if (empty($existing_user['google_id'])) {
-    $upd = $conn->prepare("UPDATE users SET google_id = :gid WHERE email = :email");
+    $upd = $conn->prepare("UPDATE users u,student_profiles sp SET sp.google_id = :gid WHERE u.email = :email");
     $upd->execute([':gid' => $google_id, ':email' => $email]);
 }
 

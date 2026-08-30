@@ -102,10 +102,10 @@ if ($existing_user) {
 // -------------------------------------------------------------------
 try {
     $ins = $conn->prepare(
-        "INSERT INTO users
-         (full_name, email, google_id, password)
-         VALUES
-         (:full_name, :email, :google_id, :password)"
+            "INSERT INTO users
+            (full_name, email,  password)
+            VALUES
+            (:full_name, :email, :password)"
     );
 
     // Random placeholder password — this account uses Google login
@@ -114,11 +114,17 @@ try {
     $ins->execute([
         ':full_name' => $name ?: $email,
         ':email'     => $email,
-        ':google_id' => $google_id,
+        // ':google_id' => $google_id,
         ':password'  => $placeholder_password,
     ]);
 
     $new_user_id = $conn->lastInsertId();
+
+    $profile = $conn->prepare("INSERT INTO student_profiles (user_id,google_id) values(:user_id,:google_id)");
+    $profile->execute([ 
+        'user_id' => $new_user_id,
+        'google_id' => $google_id
+    ]);
 
     $userModel = new User($conn);
     $userModel->ensureStudentProfile($new_user_id, $google_id);
