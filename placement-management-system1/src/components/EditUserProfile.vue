@@ -281,6 +281,11 @@
                                                 <input type="text" v-model="project.techStack" placeholder="Vue 3, Node.js" required class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-blue-500 focus:outline-none" />
                                             </div>
                                         </div>
+                                        
+                                        <div>
+                                            <label class="block text-xs text-slate-400 font-medium">Project Url | Link</label>
+                                            <input type="text" v-model="project.link" placeholder="Project Url | Link" required class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-blue-500 focus:outline-none" />
+                                        </div>
                                         <div>
                                             <label class="block text-xs text-slate-400 font-medium">Description</label>
                                             <textarea rows="2" v-model="project.description" placeholder="Project details..." required class="mt-1 block w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs text-white focus:border-blue-500 focus:outline-none"></textarea>
@@ -417,7 +422,10 @@ const addSkill = () => {
 }
 
 const removeSkill = (index) => {
-    student.value.skills.splice(index, 1)
+    const a = student.value.skills.splice(index, 1)
+    console.log(a)
+    console.log(student.value)
+
 }
 
 // Projects modifiers methods
@@ -425,6 +433,7 @@ const addNewProject = () => {
     student.value.projects.push({
         title: '',
         techStack: '',
+        link: '',
         description: ''
     })
 }
@@ -489,9 +498,13 @@ onMounted(async () => {
             // student.value.skills = user.skills;
             // student.resume_path = user.resume_path;
             // console.log(student.resume_path)
-            student.value.projects = user.projects || [
-                { title: 'College Placement Portal', techStack: 'Vue 3, Tailwind, Node.js', description: 'Developed a feature-rich portal helping college admin coordinate campus drives.' }
-            ];
+            
+            student.value.projects = user.projects.map(project => ({
+                title: project.ProjectTitle,
+                techStack: project.TechStack,
+                description: project.project_description,
+                link: project.project_link
+            }));
             
             // Load existing filename if saved on the user model (e.g. user.resume_name)
             currentResumeName.value = user.resume_path || 'Not available Any Resume';
@@ -504,6 +517,8 @@ onMounted(async () => {
             student.value.academics.tenth = user.tenth_percentage
             // console.log(git)
             // console.log(student.value.academics)
+            // const s = student.value.projects
+            // console.log(s)
 
             
             resumeName.value = user.resume_path.split('/').pop().split('_').slice(2).join('_');
@@ -556,13 +571,18 @@ const saveProfile = async () => {
         formData.append('github',student.value.socials.github)
         formData.append('linkedin',student.value.socials.linkedin)
         formData.append('skills',JSON.stringify(student.value.skills))
+        formData.append('projects',JSON.stringify(student.value.projects))
+
+        // formData.append('projects_title', JSON.stringify(student.value.projects.map(p => p.title)))
+        // formData.append('projects_description', JSON.stringify(student.value.projects.map(p => p.description)))
+        // formData.append('projects_link', JSON.stringify(student.value.projects.map(p => p.link)))
+        // formData.append('projects_techStack', JSON.stringify(student.value.projects.map(p => p.techStack)))
         // formData.append('studentprofileId',student.value.studentprofileId)
 
         // // Serialize object data to JSON strings (so PHP $_POST receives readable strings)
         // formData.append('socials', JSON.stringify(student.value.socials))
         // formData.append('academics', JSON.stringify(student.value.academics))
         // formData.append('skills', JSON.stringify(student.value.skills))
-        // formData.append('projects', JSON.stringify(student.value.projects))
 
         // Append the new PDF file to override the old file if chosen
         if (selectedFile.value) {

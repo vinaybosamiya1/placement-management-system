@@ -125,6 +125,18 @@ WHERE u.id=? LIMIT 1
     */
     $user['skills'] = $skills;
     
+
+    // fetch user_project Data
+    $projectsSql = "SELECT student_profile_id,ProjectTitle,TechStack,project_description,project_link 
+        FROM user_project WHERE student_profile_id = :student_profiles_id 
+    ";
+    $projectsStmt = $conn->prepare($projectsSql);
+    $projectsStmt->bindParam('student_profiles_id',$user['student_profile_id']);
+    // $projectsStmt->execute([$user['student_profile_id']]);
+    $projectsStmt->execute();
+    $projects = $projectsStmt->fetchAll(PDO::FETCH_ASSOC);
+    $user['projects'] = $projects;
+
     
     echo json_encode([
         "success" => true,

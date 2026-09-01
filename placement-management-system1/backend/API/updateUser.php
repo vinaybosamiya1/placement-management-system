@@ -24,7 +24,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$skillsJson = $_POST['skills'] ?? "[]";
+
 
 $firstName     = trim($_POST["firstName"] ?? "");
 $lastName      = trim($_POST["lastName"] ?? "");
@@ -40,12 +40,22 @@ $twelfth       = trim($_POST['twelfth']??'80');
 $tenth         = trim($_POST['tenth']??'90');
 $github        = trim($_POST['github']??strtoupper('add github link'));
 $linkedin      = trim($_POST['linkedin']??strtoupper('add linkedin url'));
+
+$skillsJson = $_POST['skills'] ?? "[]";
 $skills        = json_decode($skillsJson, true);
+
 $studentprofileId = trim($_POST['studentprofileId']??"");
+
+$projectsJson = $_POST['projects'] ?? "[]";
+$projects        = json_decode($projectsJson, true);
 
 // checks the $skills is array or not if not array to become empty array of $skills
 if (!is_array($skills)) {
     $skills = [];
+}
+// checks the $projects is array or not if not array to become empty array of $projects
+if (!is_array($projects)) {
+    $projects = [];
 }
  
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
@@ -130,7 +140,12 @@ $result = $updateProfile->updateProfile(
 
     $linkedin,
 
-    $skills
+    $skills,
+    $projects
+    // $project_title,
+    // $project_techStack,
+    // $project_description,
+    // $project_link
     // $studentprofileId,
     
     // $socials,
@@ -143,5 +158,6 @@ $result = $updateProfile->updateProfile(
 );
 echo json_encode($result);
 exit;
+
 
 ?>

@@ -118,8 +118,8 @@ class User
     }
 
     // public function updateProfile($id,$fullName,$rollNo,$branch,$completedYear,$phone,$location,$socials,$academics,$skills,$projects) 
-    public function updateProfile($id, $firstName, $lastName, $fullName, $rollNo, $branch, $completedYear, $phone, $location, $resume_path, $cgpa, $backlogs, $twelfth, $tenth, $github, $linkedin, $skills)
-    // public function updateProfile($id, $firstName, $lastName, $fullName, $rollNo, $branch, $completedYear, $phone, $location, $resume_path, $cgpa, $backlogs, $twelfth, $tenth, $github, $linkedin,$studentprofileId,$skills)
+    // public function updateProfile($id, $firstName, $lastName, $fullName, $rollNo, $branch, $completedYear, $phone, $location, $resume_path, $cgpa, $backlogs, $twelfth, $tenth, $github, $linkedin, $skills, $project_title,$project_techStack,$project_description,$project_link)
+    public function updateProfile($id, $firstName, $lastName, $fullName, $rollNo, $branch, $completedYear, $phone, $location, $resume_path, $cgpa, $backlogs, $twelfth, $tenth, $github, $linkedin, $skills, $projects)
     {
 
         try {
@@ -293,6 +293,59 @@ class User
 
 
             }
+
+            /*
+            ====================================
+            DELETE OLD USER_PROJECTS
+            ====================================
+            */
+            $sql = "DELETE FROM user_project WHERE student_profile_id = :student_profile_id";
+            $query = $this->conn->prepare($sql);
+            $query->execute([
+                ':student_profile_id'=>$studentprofileId
+            ]);
+
+
+            /*
+            ====================================
+            INSERT NEW USER_PROJECTS
+            ====================================
+            */
+            $sql = "INSERT INTO user_project (users_id,student_profile_id,ProjectTitle,TechStack,project_description,project_link) 
+                    VALUES 
+                    (
+                    :user_id,
+                    :student_profile_id,
+                    :project_title,
+                    :project_techStack,
+                    :project_description,
+                    :project_link
+                    )
+            ";
+            $query = $this->conn->prepare($sql);
+            foreach($projects as $project){
+                $title = ucfirst(trim($project['title']));
+                $techStack = ucfirst(trim($project['techStack']));
+                $desc = ucfirst(trim($project['description']));
+                $link = ucfirst(trim($project['link']));
+
+                if (!empty($title) && !empty($techStack) && !empty($desc) && !empty($link)){
+                    
+                        $query->execute([
+                        ':user_id'=>$id,
+                        ':student_profile_id'=>$studentprofileId,
+                        ':project_title'=>$title,
+                        ':project_techStack'=>$techStack,
+                        ':project_description'=>$desc,
+                        ':project_link'=>$link
+                    ]);
+                }                
+            }
+            // if($query->rowCount() === 0){
+            //     $truncatesql = 'TRUNCATE TABLE user_project';
+            //     $query = $this->conn->prepare($truncatesql);
+            //     $query->execute();
+            // }
             /*
         ====================================
         COMMIT TRANSACTION

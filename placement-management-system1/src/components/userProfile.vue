@@ -318,13 +318,13 @@ onMounted(async () => {
 
       student.value.socials.github = user.value.github_url
       student.value.socials.linkedin = user.value.linkedin_url
-      console.log(user.value.skills)
+      // console.log(user.value.skills)
 
       if(user.value.skills){
         student.value.skills = user.value.skills
       }
 
-      console.log(user.value)
+      // console.log(user.value)
 
       if (user.value.full_name) {
         const parts = user.value.full_name.trim().split(" ");
