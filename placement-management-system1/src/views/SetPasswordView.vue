@@ -14,7 +14,7 @@
     <!-- Main Workspace Layout -->
     <div class="flex-1 flex flex-col md:flex-row relative z-10 overflow-hidden">
       <!-- Left Sidebar Navigation (Reset Password Active) -->
-      <LeftSidesection activeTab="Reset Password" />
+      <LeftSidesection activeTab="Set / Reset Password" />
 
       <!-- Main Workspace Viewport -->
       <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-h-[calc(100vh-80px)] flex items-center justify-center">

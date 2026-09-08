@@ -41,6 +41,12 @@ const routes = [
     {
         path: "/forget-password", name: 'forget-password', component: () => import('../views/SetPasswordView.vue'), meta: { requiresAuth: true }
     },
+    {
+        path: "/companypanel", name: 'companypanel', component: () => import('../views/companypanel/CompanyPanel.vue'), 
+        meta: {
+            requiresAuth:true,
+        }
+    },
     // {
     //     path: "/reset-password", name: 'reset-password', component: () => import('../components/Dashboard.vue'), meta: { requiresAuth: true }
     // },

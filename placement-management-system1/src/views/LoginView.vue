@@ -269,6 +269,23 @@ async function handleLogin() {
   // Fake delay from Code 1
   await new Promise((r) => setTimeout(r, 1200));
 
+  console.log("Login attempt:", selectedRole.value, form.email, form.password);
+  
+  if (selectedRole.value.toLowerCase() === 'companies' && form.email.trim().toLowerCase() === 'company@gmail.com' && form.password.trim() === 'company@gmail.com') {
+      message.value = "Welcome Company!";
+      messageType.value = "success";
+
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userRole', 'Companies');
+
+      setTimeout(() => {
+        router.push("/companypanel");
+        loading.value = false;
+      }, 1200);
+      
+      return;
+  }
+
   try {
     const res = await axios.post("http://localhost/placementManagement/placement-management-system/placement-management-system1/backend/API/login.php",
       {

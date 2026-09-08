@@ -82,7 +82,7 @@ const leftsideItems = [
     { logo: JobListing, title: "Job Listing" },
     { logo: applicationIcon, title: "My Application" },
     { logo: profileIcon, title: "Profile" },
-    { logo: KeyIcon, title: "Reset Password" },
+    { logo: KeyIcon, title: "Set / Reset Password" },
     { logo: logoutIcon, title: "Logout" },
 ];
 
